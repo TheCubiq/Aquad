@@ -154,8 +154,6 @@ export default function App() {
         console.log(`isActive: ${isActive}`);
         break;
     }
-  }	
-    }
   };
 
   const clickAction = (x, y) => {
