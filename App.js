@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
+import GameBoard from "./src/components/GameBoard";
 import { colors } from "./src/constants";
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
     <SafeAreaView style={[styles.container, styles.safearea]}>
       <StatusBar style="auto" />
       <Text style={styles.title}>AQUAD</Text>
+      <GameBoard />
     </SafeAreaView>
   );
 }
