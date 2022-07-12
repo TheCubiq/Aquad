@@ -256,22 +256,25 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
 
     // marginHorizontal: 5,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+    // flexDirection: "column",
+    flexDirection: "column-reverse",
+    // justifyContent: "flex-end",
+    // show items in reverse order
     // alignItems: "center",
     // alignContent: "center",
   },
   tile: {
     // backgroundColor: "green",
-    borderWidth: 4,
-    borderColor: colors.primary,
-    borderRadius: 10,
-    // margin: 5,
     transform: [
       {
         scale: 0.9,
       },
     ],
+    borderWidth: 8,
+    borderRadius: 10,
+
+    // margin: 5,
+
     // i had to use transform scale instead of margin as the margin was
     // not centering the tile correctly..
     aspectRatio: 1,
@@ -291,5 +294,11 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     // alignItems: "center",
+  },
+  btn: {
+    backgroundColor: "#5a0059",
+    padding: 10,
+    borderRadius: 10,
+    margin: 10,
   },
 });
