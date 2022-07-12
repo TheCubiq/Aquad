@@ -1,6 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  Platform,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { colors } from "./src/constants";
 
 // generate random number between 6 and 17
