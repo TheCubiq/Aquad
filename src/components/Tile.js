@@ -5,45 +5,96 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { colors } from "./../constants";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+
+String.prototype.hexToRgba = function (alpha = 1) {
+  let c;
+  // if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(this)){
+  c = this.substring(1).split("");
+  if (c.length == 3) {
+    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+  }
+  c = "0x" + c.join("");
+  return (
+    "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255, alpha].join(",") + ")"
+  );
+  // }
+};
+
+String.prototype.rgbaChange = function (alpha) {
+  let c;
+  c = this.replace(/[\d.]+\)$/g, alpha + ")")
+  return (c);
+};
 
 const Tile = (props) => {
-  const { tile } = props;
+  const { tile, size } = props;
   const { width } = useWindowDimensions();
-  const tileSize = width / tile.size;
+  const tileSize = width / size;
+
+  const column = useSharedValue(tile.column * tileSize);
+  const row = useSharedValue(tile.row * tileSize);
+  const color = useSharedValue(colors[`tile_${tile.color}`].hexToRgba(0));
+  const borderColor = useSharedValue(colors[`tile_${tile.color}`].hexToRgba(0));
+  const opacity = useSharedValue(1);
+
+  useEffect(() => {
+    column.value = tile.column * tileSize;
+    row.value = tile.row * tileSize;
+    borderColor.value = colors[`tile_${tile.color}`].hexToRgba(1);
+    color.value = colors[`tile_${tile.color}`].hexToRgba(tile.active ? 1 : 0);
+    opacity.value = tile.color === 0 ? 0 : 1;
+  });
+
+  const mypos = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: withTiming(column.value, { duration: 1000 }),
+        },
+        {
+          translateY: withTiming(row.value, { duration: 1000 }),
+        },
+        {
+          scale: 0.8,
+        },
+      ],
+      backgroundColor: withTiming(color.value, { duration: 250 }),
+      borderColor: withTiming(borderColor.value, { duration: 500 }),
+      opacity: withTiming(opacity.value, { duration: 500 }),
+    };
+  });
 
   return (
-    <Pressable
+    <Animated.View
       style={[
         styles.cell,
         {
-          backgroundColor: tile.active
-            ? colors[`tile_${tile.color}`]
-            : "transparent",
-          borderColor: colors[`tile_${tile.color}`],
           //   transform x and y
           width: tileSize,
           height: tileSize,
-          transform: [
-            {
-              translateX: tile.column * tileSize,
-            },
-            {
-              translateY: tile.row * tileSize,
-            },
-            {
-              scale: 0.8,
-            },
-          ],
         },
+        mypos,
       ]}
-      onPress={() => {
-        props.onTileClick(tile);
-      }}
     >
+      <Pressable
+        onPress={() => {
+          props.onTileClick(tile);
+        }}
+        style={{
+          width: tileSize,
+          height: tileSize,
+        }}
+      ></Pressable>
       {/* <Text style={styles.tiletext}>{tile.color}</Text> */}
-    </Pressable>
+    </Animated.View>
   );
 };
 

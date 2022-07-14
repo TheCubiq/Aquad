@@ -6,7 +6,7 @@ import Cell from "./Cell";
 import { Board } from "../objects";
 
 const GameBoard = () => {
-  const [board, setBoard] = React.useState(new Board());
+  const [board, setBoard] = React.useState(new Board(5));
 
   const cells = board.cells.map((row, rowIndex) => {
     return (
@@ -33,7 +33,7 @@ const GameBoard = () => {
   const tiles = board.tiles
     // .filter((tile) => tile.color !== 0)
     .map((tile, index) => {
-      return <Tile key={index} tile={tile} onTileClick={onTileClick} />;
+      return <Tile key={index * board.size + tile.column} tile={tile} size={board.size} onTileClick={onTileClick} />;
     });
 
   return (
