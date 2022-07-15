@@ -30,8 +30,8 @@ String.prototype.hexToRgba = function (alpha = 1) {
 
 String.prototype.rgbaChange = function (alpha) {
   let c;
-  c = this.replace(/[\d.]+\)$/g, alpha + ")")
-  return (c);
+  c = this.replace(/[\d.]+\)$/g, alpha + ")");
+  return c;
 };
 
 const Tile = (props) => {
@@ -41,16 +41,16 @@ const Tile = (props) => {
 
   const column = useSharedValue(tile.column * tileSize);
   const row = useSharedValue(tile.row * tileSize);
-  const color = useSharedValue(colors[`tile_${tile.color}`].hexToRgba(0));
-  const borderColor = useSharedValue(colors[`tile_${tile.color}`].hexToRgba(0));
-  const opacity = useSharedValue(1);
+  const color = useSharedValue(colors[`tile_${tile.color}`]);
+  const fillColor = useSharedValue(color.value.hexToRgba(0));
+  const borderColor = useSharedValue(color.value.hexToRgba(0));
 
   useEffect(() => {
     column.value = tile.column * tileSize;
     row.value = tile.row * tileSize;
+    color.value = colors[`tile_${tile.color}`];
+    fillColor.value = color.value.hexToRgba(0.5);
     borderColor.value = colors[`tile_${tile.color}`].hexToRgba(1);
-    color.value = colors[`tile_${tile.color}`].hexToRgba(tile.active ? 1 : 0);
-    opacity.value = tile.color === 0 ? 0 : 1;
   });
 
   const mypos = useAnimatedStyle(() => {
@@ -66,9 +66,8 @@ const Tile = (props) => {
           scale: 0.8,
         },
       ],
-      backgroundColor: withTiming(color.value, { duration: 250 }),
+      backgroundColor: withTiming(fillColor.value, { duration: 250 }),
       borderColor: withTiming(borderColor.value, { duration: 500 }),
-      opacity: withTiming(opacity.value, { duration: 500 }),
     };
   });
 
@@ -92,8 +91,9 @@ const Tile = (props) => {
           width: tileSize,
           height: tileSize,
         }}
-      ></Pressable>
-      {/* <Text style={styles.tiletext}>{tile.color}</Text> */}
+      >
+        <Text style={styles.tiletext}>{tile.color}</Text>
+      </Pressable>
     </Animated.View>
   );
 };
