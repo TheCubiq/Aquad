@@ -36,23 +36,32 @@ String.prototype.rgbaChange = function (alpha) {
 
 const Tile = (props) => {
   const { tile, size } = props;
-  const { width } = useWindowDimensions();
-  const tileSize = width / size;
+  const { width, height } = useWindowDimensions();
+  // const width = (windowWidth > 600) ? 600 : windowWidth;
+  const tileSize = ((width>height)? height:width) / size;
 
   const column = useSharedValue(tile.column * tileSize);
-  const row = useSharedValue(tile.row * tileSize);
+  const row = useSharedValue((size-1 - tile.row) * tileSize);
   const color = useSharedValue(colors[`tile_${tile.color}`]);
-  const fillColor = useSharedValue(color.value.hexToRgba(0));
-  const borderColor = useSharedValue(color.value.hexToRgba(1));
-  const active = useSharedValue(0);
+  // const fillColor = useSharedValue(color.value.hexToRgba(0));
+  // const borderColor = useSharedValue(color.value.hexToRgba(1));
+  const isFilled = useSharedValue(0);
+  const isActive = useSharedValue(0);
 
   useEffect(() => {
     column.value = tile.column * tileSize;
-    row.value = tile.row * tileSize;
+    row.value = (size-1 - tile.row) * tileSize;
     color.value = colors[`tile_${tile.color}`];
-    fillColor.value = color.value.hexToRgba(0);
-    borderColor.value = colors[`tile_${tile.color}`].hexToRgba(1);
-    active.value = tile.active ? 1 : 0;
+    isActive.value = tile.active ? 1 : 1;
+    // fillColor.value = color.value.hexToRgba(0);
+    // borderColor.value = colors[`tile_${tile.color}`].hexToRgba(1);
+    isFilled.value = tile.connected ? 1 : 0;
+  });
+
+  const filled = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isFilled.value, { duration: 1000 }),
+    };
   });
 
   const mypos = useAnimatedStyle(() => {
@@ -62,42 +71,61 @@ const Tile = (props) => {
           translateX: withTiming(column.value),
         },
         {
-          translateY: withSpring(row.value),
+          translateY: withSpring(row.value, { duration: 2000 }),
         },
         {
           scale: 0.8,
         },
       ],
-      opacity: withTiming(active.value),
-      backgroundColor: withTiming(fillColor.value, { duration: 250 }),
-      borderColor: withTiming(borderColor.value, { duration: 500 }),
+      opacity: withTiming(isActive.value),
     };
   });
 
   return (
-    <Animated.View
-      style={[
-        styles.cell,
-        {
-          //   transform x and y
-          width: tileSize,
-          height: tileSize,
-        },
-        mypos,
-      ]}
+    <Pressable
+      onPress={() => {
+        props.onTileClick(tile);
+      }}
     >
-      <Pressable
-        onPress={() => {
-          props.onTileClick(tile);
-        }}
-        style={{
-          width: tileSize,
-          height: tileSize,
-        }}
+      <Animated.View
+        style={[
+          styles.cell,
+          {
+            borderColor: colors[`tile_${tile.color}`],
+            width: tileSize,
+            height: tileSize,
+          },
+          mypos,
+        ]}
       >
-        <Text style={styles.tiletext}>{tile.color}</Text>
-      </Pressable>
-    </Animated.View>
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              // alignSelf: "center",
+              width: tileSize,
+              height: tileSize,
+              backgroundColor: colors[`tile_${tile.color}`],
+            },
+            filled,
+          ]}
+        />
+        <View
+          style={[
+            styles.textView,
+            {
+              position: "absolute",
+              height: tileSize,
+              width: tileSize,
+            },
+          ]}
+        >
+          <Text style={[styles.tiletext]}>
+            {tile.column},{tile.row}
+          </Text>
+        </View>
+      </Animated.View>
+    </Pressable>
   );
 };
 
@@ -107,8 +135,11 @@ const styles = StyleSheet.create({
   cell: {
     position: "absolute",
 
-    borderWidth: 8,
-    borderRadius: 15,
+    // borderWidth: 1,
+    // borderBottomWidth: 8,
+
+    borderWidth: 10,
+    borderRadius: 30,
 
     opacity: 1,
     // margin: 5,
@@ -121,14 +152,26 @@ const styles = StyleSheet.create({
     // ],
 
     // flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
+    overflow: "hidden",
   },
   tiletext: {
+    // position: "absolute",
+    // top: "45%",
+    // left: "48%",
+    // flex: 1,
     fontSize: 30,
     fontWeight: "bold",
     color: colors.secondary,
-    textAlign: "center",
-    textAlignVertical: "center",
+    // textAlign: "center",
+  },
+  textView: {
+    // backgroundColor: "red",
+    // display: "flex",
+    // alignSelf: "center",
+
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

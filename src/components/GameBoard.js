@@ -5,8 +5,7 @@ import Tile from "./Tile";
 import { Board } from "../objects";
 
 const GameBoard = () => {
-  const [board, setBoard] = React.useState(new Board(5));
-
+  const [board, setBoard] = React.useState(new Board(7));
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
@@ -27,14 +26,21 @@ const GameBoard = () => {
   //   });
 
   const cols = board.cols.map((col, index) => {
-    return <View key={index} style={styles.column}>
-      {col.map((tile, index) => {
-        return <Tile key={tile.id} tile={tile} size={board.size} onTileClick={onTileClick} />;
-      }
-      )}
-    </View>;
-  }
-  );
+    return (
+      <View key={index} style={styles.column}>
+        {col.map((tile, index) => {
+          return (
+            <Tile
+              key={tile.id}
+              tile={tile}
+              size={board.size}
+              onTileClick={onTileClick}
+            />
+          );
+        })}
+      </View>
+    );
+  });
 
   return (
     <View style={styles.map}>
@@ -52,6 +58,7 @@ const styles = StyleSheet.create({
   map: {
     alignSelf: "stretch",
     aspectRatio: 1,
+    // backgroundColor: "#f700ff",
   },
   row: {
     flexDirection: "row",
