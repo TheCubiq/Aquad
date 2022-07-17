@@ -29,7 +29,7 @@ const GameBoard = () => {
   const cols = board.cols.map((col, index) => {
     return <View key={index} style={styles.column}>
       {col.map((tile, index) => {
-        return <Tile key={index} tile={tile} size={board.size} onTileClick={onTileClick} />;
+        return <Tile key={tile.id} tile={tile} size={board.size} onTileClick={onTileClick} />;
       }
       )}
     </View>;

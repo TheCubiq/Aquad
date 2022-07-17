@@ -43,29 +43,32 @@ const Tile = (props) => {
   const row = useSharedValue(tile.row * tileSize);
   const color = useSharedValue(colors[`tile_${tile.color}`]);
   const fillColor = useSharedValue(color.value.hexToRgba(0));
-  const borderColor = useSharedValue(color.value.hexToRgba(0));
+  const borderColor = useSharedValue(color.value.hexToRgba(1));
+  const active = useSharedValue(0);
 
   useEffect(() => {
     column.value = tile.column * tileSize;
     row.value = tile.row * tileSize;
     color.value = colors[`tile_${tile.color}`];
-    fillColor.value = color.value.hexToRgba(0.5);
+    fillColor.value = color.value.hexToRgba(0);
     borderColor.value = colors[`tile_${tile.color}`].hexToRgba(1);
+    active.value = tile.active ? 1 : 0;
   });
 
   const mypos = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateX: withTiming(column.value, { duration: 1000 }),
+          translateX: withTiming(column.value),
         },
         {
-          translateY: withTiming(row.value, { duration: 1000 }),
+          translateY: withSpring(row.value),
         },
         {
           scale: 0.8,
         },
       ],
+      opacity: withTiming(active.value),
       backgroundColor: withTiming(fillColor.value, { duration: 250 }),
       borderColor: withTiming(borderColor.value, { duration: 500 }),
     };
@@ -105,9 +108,9 @@ const styles = StyleSheet.create({
     position: "absolute",
 
     borderWidth: 8,
-    borderRadius: 10,
+    borderRadius: 15,
 
-    opacity: 0.8,
+    opacity: 1,
     // margin: 5,
     // i had to use transform scale instead of margin as the margin was
     // not centering the tile correctly..
