@@ -19,6 +19,7 @@ class Board {
     this.cols = [];
     // this.tiles = [];
     this.size = size || 4;
+    this.moves = 0;
 
     for (let i = 0; i < this.size; ++i) {
       this.cols[i] = [];
@@ -38,13 +39,11 @@ class Board {
   }
 
   getTile(column, row) {
-    //  we check 
     return this.cols[column][row];
   }
 
   removeTile(tile) {
     // remove all tiles that are connected to this tile
-    // console.log(tile);
     tile.active = false;
     // console.log(tile);
     // console.log(tile.connectedList);
@@ -58,7 +57,7 @@ class Board {
     // update the position of all tiles
     // filter out tiles that are not active
     this.cols.forEach((column, columnIndex) => {
-      column = column.filter(tile => tile.active);
+      column = column.filter((tile) => tile.active);
       column.forEach((tile, rowIndex) => {
         tile.column = columnIndex;
         tile.row = rowIndex;
@@ -73,16 +72,19 @@ class Board {
     // 3. if any of the neighbors have the same color, we add the tile to the connected list
     // 4. we then call that tile and check its neighbors
     // 5. we repeat steps 3 and 4 until they don't have any neighbors with the same color
-    // 6. we then check the next column and repeat steps 1-5 
+    // 6. we then check the next column and repeat steps 1-5
     // 7. we repeat steps 1-6 until we check all columns
     // 8. we then check each tile in each connected list and set its connected property to true
 
     for (let i = 0; i < this.size; ++i) {
-      // step 1
-      let tile = this.getTile(i, 0);
-      tile.connected = true;
-      // step 2
-      this.checkNeighbors(tile);
+      if (this.cols[i].length > 0) {
+        // step 1
+        let tile = this.getTile(i, 0);
+        tile.connected = true;
+        // step 2
+        this.checkNeighbors(tile);
+        // console.log(this.cols[i].length);
+      }
     }
   }
 
@@ -97,19 +99,26 @@ class Board {
     if (tile.row > 0) {
       neighbors.push(this.getTile(tile.column, tile.row - 1));
     }
-    if (tile.row < this.cols[tile.column].length - 1) {
+    if (tile.row < this.cols[tile.column].length) {
       neighbors.push(this.getTile(tile.column, tile.row + 1));
     }
     // filter the neighbors to only include tiles that have the same color
-    neighbors = neighbors.filter(neighbor => neighbor.color === tile.color && !neighbor.connected);
-
-    neighbors.forEach((neighbor) => {
+    try {
+      neighbors = neighbors.filter(
+        (neighbor) => neighbor.color === tile.color && !neighbor.connected
+      );
+      neighbors.forEach((neighbor) => {
         tile.connectedList.push([neighbor.column, neighbor.row]);
         neighbor.connected = true;
         this.checkNeighbors(neighbor);
-    });
+      });
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+    // neighbors = neighbors.filter(neighbor => neighbor.color === tile.color );
 
-    console.log("tile",tile.column,tile.connectedList);
+    // console.log("tile", tile.column, tile.connectedList);
   }
 
   disconnectAll() {
@@ -122,11 +131,11 @@ class Board {
     });
   }
 
-
   clicked(tile) {
+    this.moves++;
     // console.log(tile);
     // this.removeTile(tile);
-    // console.log(tile);
+    // console.log("\n");
     this.removeTile(tile);
     this.updateColumns();
     this.disconnectAll();

@@ -5,7 +5,7 @@ import Tile from "./Tile";
 import { Board } from "../objects";
 
 const GameBoard = () => {
-  const [board, setBoard] = React.useState(new Board(7));
+  const [board, setBoard] = React.useState(new Board(5));
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
@@ -44,10 +44,7 @@ const GameBoard = () => {
 
   return (
     <View style={styles.map}>
-      {/* {cells} */}
-      {/* {tiles} */}
       {cols}
-      {/* <Tile tile={board.columns[0]} size={board.size} onTileClick={onTileClick} /> */}
     </View>
   );
 };

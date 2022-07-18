@@ -11,7 +11,7 @@ export default function App() {
       <View style={styles.grid}>
         <GameBoard />
       </View>
-      <Text style={styles.title}>AQUAD</Text>
+      <Text style={styles.title}>omg it works-ish</Text>
     </SafeAreaView>
   );
 }
