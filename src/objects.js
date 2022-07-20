@@ -90,6 +90,7 @@ class Board {
 
   checkNeighbors(tile) {
     let neighbors = [];
+    // check the neighbors of the tile 
     if (tile.column > 0) {
       neighbors.push(this.getTile(tile.column - 1, tile.row));
     }
@@ -132,19 +133,21 @@ class Board {
   }
 
   clicked(tile) {
-    this.moves++;
-    // console.log(tile);
-    // this.removeTile(tile);
-    // console.log("\n");
-    this.removeTile(tile);
-    this.updateColumns();
-    this.disconnectAll();
-    this.updateConnected();
+    if (tile.connected) {
+      this.moves++;
+      // console.log(tile);
+      // this.removeTile(tile);
+      // console.log("\n");
+      this.removeTile(tile);
+      this.updateColumns();
+      this.disconnectAll();
+      this.updateConnected();
 
-    // tile.row = tile.row+1;
-    // tile.row = tile.row + Math.floor(tile.column/4);
-    // tile.column = (tile.column+1)%5;
-    // tile.color = (tile.color+1)%4;
+      // tile.row = tile.row+1;
+      // tile.row = tile.row + Math.floor(tile.column/4);
+      // tile.column = (tile.column+1)%5;
+      // tile.color = (tile.color+1)%4;
+    }
     return this;
   }
 
