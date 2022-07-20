@@ -38,10 +38,10 @@ const Tile = (props) => {
   const { tile, size } = props;
   const { width, height } = useWindowDimensions();
   // const width = (windowWidth > 600) ? 600 : windowWidth;
-  const tileSize = ((width>height)? height:width) / size;
+  const tileSize = (width > height ? height : width) / size;
 
   const column = useSharedValue(tile.column * tileSize);
-  const row = useSharedValue((size-1 - tile.row) * tileSize);
+  const row = useSharedValue((size - 1 - tile.row) * tileSize);
   const color = useSharedValue(colors[`tile_${tile.color}`]);
   // const fillColor = useSharedValue(color.value.hexToRgba(0));
   // const borderColor = useSharedValue(color.value.hexToRgba(1));
@@ -50,7 +50,7 @@ const Tile = (props) => {
 
   useEffect(() => {
     column.value = tile.column * tileSize;
-    row.value = (size-1 - tile.row) * tileSize;
+    row.value = (size - 1 - tile.row) * tileSize;
     color.value = colors[`tile_${tile.color}`];
     isActive.value = tile.active ? 1 : 1;
     // fillColor.value = color.value.hexToRgba(0);
@@ -71,7 +71,10 @@ const Tile = (props) => {
           translateX: withTiming(column.value),
         },
         {
-          translateY: withSpring(row.value, { duration: 2000 }),
+          translateY:
+            withSpring(
+            row.value,
+          { duration: 2000 }),
         },
         {
           scale: 0.8,
