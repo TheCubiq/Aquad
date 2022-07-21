@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 
 import Tile from "./Tile";
 import { Board } from "../objects";
+import { colors } from './../constants';
 
 const GameBoard = () => {
-  const [board, setBoard] = useState(new Board(7));
+  const [board, setBoard] = useState(new Board(5));
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
@@ -27,11 +28,11 @@ const GameBoard = () => {
 
   const cols = board.cols.map((col, index) => {
     return (
-      <View key={index} style={styles.column}>
-        {col.map((tile, index) => {
+      <View key={index*board.id} style={styles.column}>
+        {col.map((tile) => {
           return (
             <Tile
-              key={tile.id}
+              key={tile.id*board.id}
               tile={tile}
               size={board.size}
               onTileClick={onTileClick}
@@ -43,9 +44,27 @@ const GameBoard = () => {
   });
 
   return (
-    <View style={styles.map}>
-      {cols}
-    </View>
+    <>
+      <TouchableOpacity 
+      onPress={() => {
+        setBoard(new Board(5));
+      }}
+      style={styles.moves}>
+        <Text style={{
+          fontSize: 40,
+          fontWeight: "bold",
+          color: colors.primary,
+        }}>start again</Text>
+      </TouchableOpacity>
+      <View style={styles.map}>{cols}</View>
+      <View style={styles.moves}>
+        <Text style={{
+          fontSize: 40,
+          fontWeight: "bold",
+          color: colors.primary,
+        }}>moves: {board.moves}</Text>
+      </View>
+    </>
   );
 };
 
@@ -60,4 +79,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
   },
+  moves:{
+    // backgroundColor: "#f700ff",
+    alignItems: "center",
+    
+  }
+
 });
