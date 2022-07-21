@@ -8,8 +8,10 @@ import {
 import React, { useEffect } from "react";
 import { colors } from "./../constants";
 import Animated, {
+  FadeOut,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -71,10 +73,10 @@ const Tile = (props) => {
           translateX: withTiming(column.value),
         },
         {
-          translateY:
-            withSpring(
-            row.value,
-          { duration: 2000 }),
+          translateY: withDelay(
+            100,
+            withSpring(row.value, { duration: 2000 }),
+          ),
         },
         {
           scale: 0.8,
@@ -100,6 +102,7 @@ const Tile = (props) => {
           },
           mypos,
         ]}
+        exiting={FadeOut}
       >
         <Animated.View
           style={[
