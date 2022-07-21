@@ -78,10 +78,8 @@ class Board {
 
     for (let i = 0; i < this.size; ++i) {
       if (this.cols[i].length > 0) {
-        // step 1
         let tile = this.getTile(i, 0);
         tile.connected = true;
-        // step 2
         this.checkNeighbors(tile);
         // console.log(this.cols[i].length);
       }
@@ -133,20 +131,13 @@ class Board {
   }
 
   clicked(tile) {
+    console.log(tile.column, tile.row, tile);
     if (tile.connected) {
-      this.moves++;
-      // console.log(tile);
+      // this.moves++;
       // this.removeTile(tile);
-      // console.log("\n");
-      this.removeTile(tile);
       this.updateColumns();
       this.disconnectAll();
       this.updateConnected();
-
-      // tile.row = tile.row+1;
-      // tile.row = tile.row + Math.floor(tile.column/4);
-      // tile.column = (tile.column+1)%5;
-      // tile.color = (tile.color+1)%4;
     }
     return this;
   }
