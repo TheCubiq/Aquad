@@ -43,7 +43,7 @@ const Tile = (props) => {
   const tileSize = (width > height ? height : width) / size;
 
   const column = useSharedValue(tile.column * tileSize);
-  const row = useSharedValue((size - 1 - tile.row) * tileSize);
+  const row = useSharedValue((size-1) * tileSize);
   const color = useSharedValue(colors[`tile_${tile.color}`]);
   // const fillColor = useSharedValue(color.value.hexToRgba(0));
   // const borderColor = useSharedValue(color.value.hexToRgba(1));
@@ -89,6 +89,7 @@ const Tile = (props) => {
   return (
     <Pressable
       onPress={() => {
+        row.value = (size - 0.5 - tile.row) * tileSize;
         props.onTileClick(tile);
       }}
     >
