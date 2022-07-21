@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 import Tile from "./Tile";
 import { Board } from "../objects";
 
 const GameBoard = () => {
-  const [board, setBoard] = React.useState(new Board(5));
+  const [board, setBoard] = useState(new Board(7));
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
