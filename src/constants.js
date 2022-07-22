@@ -6,4 +6,5 @@ export const colors = {
   tile_1: "#f6f",
   tile_2: "#fe3",
   tile_3: "#fff",
+  empty: "#333",
 };

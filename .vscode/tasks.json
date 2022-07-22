@@ -2,18 +2,25 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "android",
-			"problemMatcher": [],
-			"label": "npm: android",
-			"detail": "expo start --android"
+			"label": "[Expo] run on android",
+			"type": "shell",
+			"command": "expo r -a",
+			"detail": "run the app on android",
+			"problemMatcher": []
 		},
 		{
-			"type": "npm",
-			"script": "android tunnel",
-			"problemMatcher": [],
-			"label": "npm: android [tunnel]",
-			"detail": "expo start --android --tunnel"
+			"label": "[Expo] run on android [clear cache]",
+			"type": "shell",
+			"command": "expo r -a -c",
+			"detail": "run the app and clear the cache",
+			"problemMatcher": []
 		},
+		{
+			"label": "[Expo] run tunnelled",
+			"type": "shell",
+			"command": "expo r --tunnel",
+			"detail": "run the app and clear the cache",
+			"problemMatcher": []
+		}
 	]
 }
