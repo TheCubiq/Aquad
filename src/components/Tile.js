@@ -1,7 +1,7 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -87,7 +87,7 @@ const Tile = (props) => {
   });
 
   return (
-    <Pressable
+    <TouchableWithoutFeedback
       onPress={() => {
         row.value = (size - 0.5 - tile.row) * tileSize;
         props.onTileClick(tile);
@@ -113,6 +113,7 @@ const Tile = (props) => {
               width: tileSize,
               height: tileSize,
               backgroundColor: colors[`tile_${tile.color}`],
+              zIndex: 1,
             },
             filled,
           ]}
@@ -132,7 +133,7 @@ const Tile = (props) => {
           </Text>
         </View>
       </Animated.View>
-    </Pressable>
+    </TouchableWithoutFeedback>
   );
 };
 
