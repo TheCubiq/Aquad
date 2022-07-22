@@ -3,10 +3,15 @@ import React, { useState } from "react";
 
 import Tile from "./Tile";
 import { Board } from "../objects";
-import { colors } from './../constants';
+import { colors } from "./../constants";
 
 const GameBoard = () => {
-  const [board, setBoard] = useState(new Board(5));
+  const [board, setBoard] = useState(new Board(7));
+  const onLayout = (event) => {
+    const { width } = event.nativeEvent.layout;
+    setTileWidth(width);
+  };
+  const [tileWidth, setTileWidth] = useState(0);
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
@@ -20,21 +25,20 @@ const GameBoard = () => {
     setBoard(newBoard); // update the board
   };
 
-  // const tiles = board.columns
-  //   // .filter((tile) => tile.color !== 0)
-  //   .map((tile, index) => {
-  //     return <Tile key={index * board.size + tile.column} tile={tile} size={board.size} onTileClick={onTileClick} />;
-  //   });
-
   const cols = board.cols.map((col, index) => {
     return (
-      <View key={index*board.id} style={styles.column}>
+      <View
+        key={(index + 1) * board.id}
+        style={styles.column}
+        onLayout={onLayout}
+      >
         {col.map((tile) => {
           return (
             <Tile
-              key={tile.id*board.id}
+              key={(tile.id + 1) * board.id}
               tile={tile}
               size={board.size}
+              tileS={tileWidth}
               onTileClick={onTileClick}
             />
           );
@@ -45,24 +49,32 @@ const GameBoard = () => {
 
   return (
     <>
-      <TouchableOpacity 
-      onPress={() => {
-        setBoard(new Board(5));
-      }}
-      style={styles.moves}>
-        <Text style={{
-          fontSize: 40,
-          fontWeight: "bold",
-          color: colors.primary,
-        }}>start again</Text>
+      <TouchableOpacity
+        onPress={() => {
+          setBoard(new Board(5));
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: colors.primary,
+          }}
+        >
+          start again
+        </Text>
       </TouchableOpacity>
-      <View style={styles.map}>{cols}</View>
-      <View style={styles.moves}>
-        <Text style={{
-          fontSize: 40,
-          fontWeight: "bold",
-          color: colors.primary,
-        }}>moves: {board.moves}</Text>
+        <View style={styles.map}>{cols}</View>
+      <View>
+        <Text
+          style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: colors.primary,
+          }}
+        >
+          moves: {board.moves}
+        </Text>
       </View>
     </>
   );
@@ -73,16 +85,20 @@ export default GameBoard;
 const styles = StyleSheet.create({
   map: {
     alignSelf: "stretch",
+    // flex:1,
     aspectRatio: 1,
-    // backgroundColor: "#f700ff",
-  },
-  row: {
     flexDirection: "row",
-  },
-  moves:{
-    // backgroundColor: "#f700ff",
-    alignItems: "center",
-    
-  }
+    padding: 30,
+    maxWidth: 750,
 
+    // backgroundColor: "#000dff5e",
+  },
+  column: {
+    // backgroundColor: "#f700ff5e",
+    // borderColor: "#ffffff",
+    // borderWidth: 10,
+    flex: 1,
+    alignSelf: "stretch",
+    flexDirection: "column-reverse",
+  },
 });

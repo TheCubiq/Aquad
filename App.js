@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     alignItems: "center",
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
   safearea: {
     paddingTop: Platform.OS === "android" ? 25 : 0,
@@ -32,26 +32,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.primary,
   },
-  
-  column: {
-    // backgroundColor: "blue",
-    flex: 1,
-    alignSelf: "stretch",
-
-    // marginHorizontal: 5,
-    // flexDirection: "column",
-    flexDirection: "column-reverse",
-    // justifyContent: "flex-end",
-    // show items in reverse order
-    // alignItems: "center",
-    // alignContent: "center",
-  },
   grid: {
     // backgroundColor: "#f700ff",
-    flex: 1,
+    // flex: 1,
     alignSelf: "stretch",
-    // padding: 10,
+    // justifyContent: "center",
+    padding: 10,
     justifyContent: "center",
-    // alignItems: "center",
+    alignItems: "center",
   },
 });

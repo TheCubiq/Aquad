@@ -8,6 +8,8 @@ import {
 import React, { useEffect } from "react";
 import { colors } from "./../constants";
 import Animated, {
+  FadeIn,
+  FadeInDown,
   FadeOut,
   useAnimatedStyle,
   useSharedValue,
@@ -37,101 +39,79 @@ String.prototype.rgbaChange = function (alpha) {
 };
 
 const Tile = (props) => {
-  const { tile, size } = props;
+  const { tile, size, tileS } = props;
   const { width, height } = useWindowDimensions();
   // const width = (windowWidth > 600) ? 600 : windowWidth;
-  const tileSize = (width > height ? height : width) / size;
 
-  const column = useSharedValue(tile.column * tileSize);
-  const row = useSharedValue((size-1) * tileSize);
+
+  const row = useSharedValue(0);
   const color = useSharedValue(colors[`tile_${tile.color}`]);
-  // const fillColor = useSharedValue(color.value.hexToRgba(0));
+  const fillColor = useSharedValue(color.value.hexToRgba(0));
   // const borderColor = useSharedValue(color.value.hexToRgba(1));
   const isFilled = useSharedValue(0);
-  const isActive = useSharedValue(0);
+  const isActive = useSharedValue(1);
+  const borderWidth = useSharedValue(10);
+
+
 
   useEffect(() => {
-    column.value = tile.column * tileSize;
-    row.value = (size - 1 - tile.row) * tileSize;
+    row.value = (-tile.row) * tileS;
     color.value = colors[`tile_${tile.color}`];
-    isActive.value = tile.active ? 1 : 1;
-    // fillColor.value = color.value.hexToRgba(0);
-    // borderColor.value = colors[`tile_${tile.color}`].hexToRgba(1);
+    fillColor.value = color.value.hexToRgba(tile.connected ? 1 : 0);
     isFilled.value = tile.connected ? 1 : 0;
+    borderWidth.value = tile.connected ? 0 : 10;
   });
 
-  const filled = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(isFilled.value, { duration: 1000 }),
-    };
-  });
+  // const filled = useAnimatedStyle(() => {
+  //   return {
+  //     opacity: withTiming(isFilled.value, { duration: 1000 }),
+  //   };
+  // });
 
   const mypos = useAnimatedStyle(() => {
     return {
       transform: [
+        // {
+        //   translateX: withTiming(column.value),
+        // },
         {
-          translateX: withTiming(column.value),
-        },
-        {
-          translateY: withDelay(
-            100,
-            withSpring(row.value, { duration: 2000 }),
-          ),
+          translateY: withDelay(100, withSpring(row.value, { duration: 2000 })),
         },
         {
           scale: 0.8,
         },
       ],
-      opacity: withTiming(isActive.value),
+      // opacity: withTiming(isActive.value),
+      backgroundColor: withTiming(fillColor.value, { duration: 1000 }),
+      borderWidth: withTiming(borderWidth.value, { duration: 1000 }),
     };
   });
 
+  
+
   return (
     <TouchableWithoutFeedback
+      style={{ backgroundColor: "#ff636392" }}
       onPress={() => {
-        row.value = (size - 0.5 - tile.row) * tileSize;
         props.onTileClick(tile);
       }}
     >
       <Animated.View
+        entering = {FadeIn}
         style={[
           styles.cell,
           {
+            // width: width,
             borderColor: colors[`tile_${tile.color}`],
-            width: tileSize,
-            height: tileSize,
+            width: tileS,
           },
           mypos,
         ]}
         exiting={FadeOut}
       >
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              // alignSelf: "center",
-              width: tileSize,
-              height: tileSize,
-              backgroundColor: colors[`tile_${tile.color}`],
-              zIndex: 1,
-            },
-            filled,
-          ]}
-        />
-        <View
-          style={[
-            styles.textView,
-            {
-              position: "absolute",
-              height: tileSize,
-              width: tileSize,
-            },
-          ]}
-        >
-          <Text style={[styles.tiletext]}>
-            {tile.column},{tile.row}
-          </Text>
-        </View>
+        <Text style={styles.tiletext}>
+          {tile.color}
+        </Text>
       </Animated.View>
     </TouchableWithoutFeedback>
   );
@@ -141,28 +121,12 @@ export default Tile;
 
 const styles = StyleSheet.create({
   cell: {
-    position: "absolute",
-
-    // borderWidth: 1,
-    // borderBottomWidth: 8,
-
-    borderWidth: 10,
     borderRadius: 30,
-
-    opacity: 1,
-    // margin: 5,
-    // i had to use transform scale instead of margin as the margin was
-    // not centering the tile correctly..
-    // transform: [
-    //   {
-    //     scale: 0.9,
-    //   },
-    // ],
-
-    // flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    overflow: "hidden",
+    aspectRatio: 1,
+    elevation:0,
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
   },
   tiletext: {
     // position: "absolute",
