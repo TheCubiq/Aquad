@@ -14,6 +14,13 @@
 			"command": "expo r -a -c",
 			"detail": "run the app and clear the cache",
 			"problemMatcher": []
+		},
+		{
+			"label": "[Expo] run tunnelled",
+			"type": "shell",
+			"command": "expo r --tunnel",
+			"detail": "run the app and clear the cache",
+			"problemMatcher": []
 		}
 	]
 }
