@@ -49,33 +49,7 @@ const GameBoard = () => {
 
   return (
     <>
-      <TouchableOpacity
-        onPress={() => {
-          setBoard(new Board(5));
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 40,
-            fontWeight: "bold",
-            color: colors.primary,
-          }}
-        >
-          start again
-        </Text>
-      </TouchableOpacity>
-        <View style={styles.map}>{cols}</View>
-      <View>
-        <Text
-          style={{
-            fontSize: 40,
-            fontWeight: "bold",
-            color: colors.primary,
-          }}
-        >
-          moves: {board.moves}
-        </Text>
-      </View>
+      <View style={styles.map}>{cols}</View>
     </>
   );
 };
