@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Platform, SafeAreaView, StyleSheet, Text } from "react-native";
+import { View, Platform, SafeAreaView, StyleSheet } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import GameBoard from "./src/components/GameBoard";
 import { colors } from "./src/constants";
