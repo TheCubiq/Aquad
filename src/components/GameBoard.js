@@ -58,21 +58,29 @@ export default GameBoard;
 
 const styles = StyleSheet.create({
   map: {
-    alignSelf: "stretch",
-    // flex:1,
+    width: "100%",
     aspectRatio: 1,
     flexDirection: "row",
-    padding: 30,
-    maxWidth: 750,
+    maxWidth: 420,
+    borderRadius: 30,
+    backgroundColor: colors.bg,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.43,
+    shadowRadius: 9.51,
 
-    // backgroundColor: "#000dff5e",
+    elevation: 15,
+    // padding: 30,
   },
   column: {
     // backgroundColor: "#f700ff5e",
-    // borderColor: "#ffffff",
-    // borderWidth: 10,
+    // borderColor: "#ffffff41",
+    // borderWidth: 1,
     flex: 1,
-    alignSelf: "stretch",
+    // alignSelf: "stretch",
     flexDirection: "column-reverse",
   },
 });
