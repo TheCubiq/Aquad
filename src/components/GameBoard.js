@@ -5,13 +5,15 @@ import Tile from "./Tile";
 import { Board } from "../objects";
 import { colors } from "./../constants";
 
-const GameBoard = () => {
-  const [board, setBoard] = useState(new Board(7));
+const GameBoard = (props) => {
+  const [board, setBoard] = useState(new Board(props.size));
+
+  const [tileWidth, setTileWidth] = useState(84);
+
   const onLayout = (event) => {
     const { width } = event.nativeEvent.layout;
     setTileWidth(width);
   };
-  const [tileWidth, setTileWidth] = useState(0);
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
