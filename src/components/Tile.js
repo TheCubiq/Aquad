@@ -97,7 +97,7 @@ const Tile = (props) => {
       <Animated.View
         entering = {FadeIn}
         style={[
-          styles.cell,
+          styles.tile,
           {
             // width: width,
             borderColor: colors[`tile_${tile.color}`],
@@ -118,7 +118,7 @@ const Tile = (props) => {
 export default Tile;
 
 const styles = StyleSheet.create({
-  cell: {
+  tile: {
     borderRadius: 30,
     aspectRatio: 1,
     position: "absolute",
