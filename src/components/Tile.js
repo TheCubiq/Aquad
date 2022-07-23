@@ -45,7 +45,7 @@ const Tile = (props) => {
   // const width = (windowWidth > 600) ? 600 : windowWidth;
 
 
-  const row = useSharedValue(0);
+  const row = useSharedValue((-tile.row) * tileS);
   const color = useSharedValue(colors[`tile_${tile.color}`]);
   const fillColor = useSharedValue(color.value.hexToRgba(0));
   // const borderColor = useSharedValue(color.value.hexToRgba(1));
