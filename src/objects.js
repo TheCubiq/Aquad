@@ -117,13 +117,13 @@ class Board {
     if (tile.column > 0) {
       neighbors.push(this.getTile(tile.column - 1, tile.row));
     }
-    if (tile.column < this.cols[tile.column].length - 1) {
+    if (tile.column < this.size - 1) {
       neighbors.push(this.getTile(tile.column + 1, tile.row));
     }
     if (tile.row > 0) {
       neighbors.push(this.getTile(tile.column, tile.row - 1));
     }
-    if (tile.row < this.cols[tile.column].length) {
+    if (tile.row < this.size - 1) {
       neighbors.push(this.getTile(tile.column, tile.row + 1));
     }
     return neighbors;
