@@ -1,39 +1,21 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import React, { useEffect } from "react";
 import { colors } from "./../constants";
 import Animated, {
   FadeIn,
   FadeOut,
+  interpolate,
+  interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
 
-String.prototype.hexToRgba = function (alpha = 1) {
-  let c;
-  // if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(this)){
-  c = this.substring(1).split("");
-  if (c.length == 3) {
-    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-  }
-  c = "0x" + c.join("");
-  return (
-    "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255, alpha].join(",") + ")"
-  );
-  // }
-};
+import { AntDesign } from "@expo/vector-icons";
 
-String.prototype.rgbaChange = function (alpha) {
-  let c;
-  c = this.replace(/[\d.]+\)$/g, alpha + ")");
-  return c;
-};
 
 const SPRING_CONF = {
   stiffness: 300,
@@ -44,49 +26,50 @@ const Tile = (props) => {
   const { tile, tileS } = props;
   // const width = (windowWidth > 600) ? 600 : windowWidth;
 
+  const row = useSharedValue(-tile.row * tileS);
 
-  const row = useSharedValue((-tile.row) * tileS);
-  const color = useSharedValue(colors[`tile_${tile.color}`]);
-  const fillColor = useSharedValue(color.value.hexToRgba(0));
-  // const borderColor = useSharedValue(color.value.hexToRgba(1));
-  const borderWidth = useSharedValue(10);
-
-
-
-  useEffect(() => {
-    row.value = (-tile.row) * tileS;
-    color.value = colors[`tile_${tile.color}`];
-    fillColor.value = color.value.hexToRgba(tile.connected ? 1 : 0);
-    borderWidth.value = tile.connected ? 0 : 10;
+  const connected = useDerivedValue(() => {
+    return withSpring(tile.connected ? 1 : 0, { duration: 1000 });
   });
 
-  // const filled = useAnimatedStyle(() => {
-  //   return {
-  //     opacity: withTiming(isFilled.value, { duration: 1000 }),
-  //   };
-  // });
+  useEffect(() => {
+    row.value = -tile.row * tileS;
+  });
+
+  const iconFillColor = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      connected.value,
+      [0, 1],
+      [colors[`tile_${tile.color}`], "transparent"]
+    );
+
+    const borderWidth = interpolate(connected.value, [0, 1], [0, 35]);
+
+    const width = interpolate(connected.value, [0, 1], [26, 100]);
+    const height = width;
+
+    return {
+      backgroundColor,
+      borderWidth,
+      width,
+      height,
+    };
+  });
 
   const mypos = useAnimatedStyle(() => {
+    const borderWidth = interpolate(connected.value, [0, 1], [10, 0]);
     return {
       transform: [
-        // {
-        //   translateX: withTiming(column.value),
-        // },
         {
-          translateY: withDelay(200, withSpring(row.value, SPRING_CONF)),
+          translateY: withSpring(row.value, SPRING_CONF),
         },
         {
           scale: 0.8,
         },
       ],
-      // opacity: withTiming(isActive.value),
-      backgroundColor: withTiming(fillColor.value, { duration: 1000 }),
-      shadowColor: withTiming(fillColor.value, { duration: 1000 }),
-      borderWidth: withTiming(borderWidth.value, { duration: 1000 }),
+      borderWidth,
     };
   });
-
-  
 
   return (
     <TouchableWithoutFeedback
@@ -96,7 +79,7 @@ const Tile = (props) => {
       }}
     >
       <Animated.View
-        entering = {FadeIn}
+        entering={FadeIn}
         style={[
           styles.tile,
           {
@@ -108,9 +91,22 @@ const Tile = (props) => {
         ]}
         exiting={FadeOut}
       >
-        <Text style={styles.tiletext}>
+        <Animated.View
+          style={[
+            {
+              width: 26,
+              height: 26,
+              borderRadius: 100,
+              borderColor: colors[`tile_${tile.color}`],
+              backgroundColor: "white",
+            },
+            iconFillColor,
+          ]}
+        ></Animated.View>
+        {/* <AntDesign name="heart" size={30} color={iconColor.value} /> */}
+        {/* <Text style={styles.tiletext}>
           {tile.color}
-        </Text>
+        </Text> */}
       </Animated.View>
     </TouchableWithoutFeedback>
   );
@@ -126,17 +122,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
 
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 5,
+    // },
+    // shadowOpacity: 0.34,
+    // shadowRadius: 6.27,
+    // elevation: 10,
 
-
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    
-    elevation: 10,
-
+    overflow: "hidden",
   },
   tiletext: {
     // position: "absolute",
