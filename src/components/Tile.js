@@ -81,6 +81,7 @@ const Tile = (props) => {
       ],
       // opacity: withTiming(isActive.value),
       backgroundColor: withTiming(fillColor.value, { duration: 1000 }),
+      shadowColor: withTiming(fillColor.value, { duration: 1000 }),
       borderWidth: withTiming(borderWidth.value, { duration: 1000 }),
     };
   });
@@ -124,6 +125,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
+
+
+
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    
+    elevation: 10,
+
   },
   tiletext: {
     // position: "absolute",
