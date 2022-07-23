@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { View, Platform, SafeAreaView, StyleSheet, Text } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import GameBoard from "./src/components/GameBoard";
 import { colors } from "./src/constants";
 
@@ -7,9 +8,9 @@ export default function App() {
   return (
     <SafeAreaView style={[styles.container, styles.safearea]}>
       <StatusBar style="auto" />
-      <Text style={styles.title}>AQUAD</Text>
+      <Animated.Text entering={FadeInDown.duration(1000).delay(200)} style={styles.title}>AQUAD</Animated.Text>
       <View style={styles.grid}>
-        <GameBoard />
+        <GameBoard size={5}/>
       </View>
       {/* <Text style={styles.title}>omg it works-ish</Text> */}
     </SafeAreaView>
@@ -34,10 +35,9 @@ const styles = StyleSheet.create({
   },
   grid: {
     // backgroundColor: "#f700ff",
-    // flex: 1,
+    flex: 1,
     alignSelf: "stretch",
-    // justifyContent: "center",
-    padding: 10,
+    padding: 30,
     justifyContent: "center",
     alignItems: "center",
   },
