@@ -6,7 +6,7 @@ class Tile {
     this.column = column || 0;
     this.row = row || 0;
     this.id = row || 0; // give each tile in each column a unique id
-    this.active = true; // if the tile is visibe on the board
+    this.active = true; // if the tile is visible on the board
     this.connectedList = []; // list of tiles that are connected to this tile
     this.connected = false; // if the tile is connected to another tile
     this.connectedTo = []; // the tile that this tile is connected to

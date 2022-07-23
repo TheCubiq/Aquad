@@ -14,7 +14,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { AntDesign } from "@expo/vector-icons";
+// import { AntDesign } from "@expo/vector-icons";
 
 
 const SPRING_CONF = {
@@ -56,7 +56,7 @@ const Tile = (props) => {
     };
   });
 
-  const mypos = useAnimatedStyle(() => {
+  const myPos = useAnimatedStyle(() => {
     const borderWidth = interpolate(connected.value, [0, 1], [10, 0]);
     return {
       transform: [
@@ -87,7 +87,7 @@ const Tile = (props) => {
             borderColor: colors[`tile_${tile.color}`],
             width: tileS,
           },
-          mypos,
+          myPos,
         ]}
         exiting={FadeOut}
       >

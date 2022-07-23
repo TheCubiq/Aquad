@@ -6,7 +6,7 @@ import { colors } from "./src/constants";
 
 export default function App() {
   return (
-    <SafeAreaView style={[styles.container, styles.safearea]}>
+    <SafeAreaView style={[styles.container, styles.safeArea]}>
       <StatusBar style="auto" />
       <Animated.Text entering={FadeInDown.duration(1000).delay(200)} style={styles.title}>AQUAD</Animated.Text>
       <View style={styles.grid}>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: 'center',
   },
-  safearea: {
+  safeArea: {
     paddingTop: Platform.OS === "android" ? 25 : 0,
   },
   title: {
