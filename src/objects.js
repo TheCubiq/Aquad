@@ -15,7 +15,7 @@ class Tile {
   }
   isParent() {
     // return this.row === 0;
-    // // return this.connectedTo === null;
+    // return this.connectedTo === null;
     return (
       this.connectedTo[0] === this.column && this.connectedTo[1] === this.row
     );
@@ -68,10 +68,10 @@ class Board {
     const parent = tile.isParent()
       ? tile
       : this.getTile(tile.connectedTo[0], tile.connectedTo[1]);
-    parent.active = false;
     parent.connectedList.forEach((connectedTile) => {
       this.getTile(connectedTile[0], connectedTile[1]).active = false;
     });
+    parent.active = false;
   }
 
   updateColumns() {
@@ -108,8 +108,7 @@ class Board {
       if (column.length > 0) {
         this.checkNeighbors2(column[0]);
       }
-    }
-    );
+    });
   }
 
   getNeighbors(tile) {
@@ -131,9 +130,9 @@ class Board {
   }
 
   // alternative function to "checkNeighbors"
-  // the diference is that this function doesn't write each tile to the connectedList
+  // the difference is that this function doesn't write each tile to the connectedList
   // it does connected list for only "parent tiles" (tiles in the bottom (row = 0) of the column)
-  // function has an aditional parameter "parent"
+  // function has an additional parameter "parent"
   // neighbors will be always added to the parent tile's connectedList
   // neighbors lead to the parent tile using the "connectedTo" property
   checkNeighbors2(tile, parent = null) {
