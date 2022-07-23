@@ -29,7 +29,7 @@ const Tile = (props) => {
   const row = useSharedValue(-tile.row * tileS);
 
   const connected = useDerivedValue(() => {
-    return withSpring(tile.connected ? 1 : 0, { duration: 1000 });
+    return withSpring(tile.connected ? 1 : 0, { duration: 10000 });
   });
 
   useEffect(() => {
@@ -43,9 +43,9 @@ const Tile = (props) => {
       [colors[`tile_${tile.color}`], "transparent"]
     );
 
-    const borderWidth = interpolate(connected.value, [0, 1], [0, 35]);
+    const borderWidth = interpolate(connected.value, [0, 1], [0, 100]);
 
-    const width = interpolate(connected.value, [0, 1], [26, 100]);
+    const width = interpolate(connected.value, [0, 1], [26, 230]);
     const height = width;
 
     return {
@@ -96,7 +96,7 @@ const Tile = (props) => {
             {
               width: 26,
               height: 26,
-              borderRadius: 100,
+              borderRadius: 1000,
               borderColor: colors[`tile_${tile.color}`],
               backgroundColor: "white",
             },
