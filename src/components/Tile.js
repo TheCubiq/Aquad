@@ -38,6 +38,11 @@ String.prototype.rgbaChange = function (alpha) {
   return c;
 };
 
+const SPRING_CONF = {
+  stiffness: 300,
+  damping: 20,
+};
+
 const Tile = (props) => {
   const { tile, size, tileS } = props;
   const { width, height } = useWindowDimensions();
@@ -75,7 +80,7 @@ const Tile = (props) => {
         //   translateX: withTiming(column.value),
         // },
         {
-          translateY: withDelay(100, withSpring(row.value, { duration: 2000 })),
+          translateY: withDelay(200, withSpring(row.value, SPRING_CONF)),
         },
         {
           scale: 0.8,
