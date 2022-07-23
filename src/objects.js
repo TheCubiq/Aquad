@@ -9,7 +9,7 @@ class Tile {
     this.active = true; // if the tile is visibe on the board
     this.connectedList = []; // list of tiles that are connected to this tile
     this.connected = false; // if the tile is connected to another tile
-    this.connectedTo = null; // the tile that this tile is connected to
+    this.connectedTo = []; // the tile that this tile is connected to
     // this.id = this.id++ || 0;
     // console.log(this)
   }
@@ -159,7 +159,7 @@ class Board {
       tile.connected = true;
       // tile.connectedTo = [tile.column, tile.row];
     }
-    if (tile.connectedTo === null) {
+    if (tile.connectedTo.length < 1) {
       tile.connectedTo = [tile.column, tile.row];
     }
     // }
@@ -170,7 +170,7 @@ class Board {
       column.forEach((tile) => {
         tile.connected = false;
         tile.connectedList = [];
-        tile.connectedTo = null;
+        tile.connectedTo = [];
       });
     });
   }
