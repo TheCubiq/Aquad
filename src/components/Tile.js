@@ -2,14 +2,11 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
 } from "react-native";
 import React, { useEffect } from "react";
 import { colors } from "./../constants";
 import Animated, {
   FadeIn,
-  FadeInDown,
   FadeOut,
   useAnimatedStyle,
   useSharedValue,
@@ -44,8 +41,7 @@ const SPRING_CONF = {
 };
 
 const Tile = (props) => {
-  const { tile, size, tileS } = props;
-  const { width, height } = useWindowDimensions();
+  const { tile, tileS } = props;
   // const width = (windowWidth > 600) ? 600 : windowWidth;
 
 
@@ -53,8 +49,6 @@ const Tile = (props) => {
   const color = useSharedValue(colors[`tile_${tile.color}`]);
   const fillColor = useSharedValue(color.value.hexToRgba(0));
   // const borderColor = useSharedValue(color.value.hexToRgba(1));
-  const isFilled = useSharedValue(0);
-  const isActive = useSharedValue(1);
   const borderWidth = useSharedValue(10);
 
 
@@ -63,7 +57,6 @@ const Tile = (props) => {
     row.value = (-tile.row) * tileS;
     color.value = colors[`tile_${tile.color}`];
     fillColor.value = color.value.hexToRgba(tile.connected ? 1 : 0);
-    isFilled.value = tile.connected ? 1 : 0;
     borderWidth.value = tile.connected ? 0 : 10;
   });
 
@@ -128,7 +121,6 @@ const styles = StyleSheet.create({
   cell: {
     borderRadius: 30,
     aspectRatio: 1,
-    elevation:0,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
