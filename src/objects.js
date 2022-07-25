@@ -14,11 +14,14 @@ class Tile {
     // console.log(this)
   }
   isParent() {
-    // return this.row === 0;
-    // return this.connectedTo === null;
+    // it is a parent if connectedTo is the same as its position (row and column)
     return (
       this.connectedTo[0] === this.column && this.connectedTo[1] === this.row
     );
+  }
+
+  hasConnections() {
+    return this.connectedTo.length > 1
   }
 }
 
