@@ -8,3 +8,10 @@ export const colors = {
   tile_3: "#fff",
   empty: "#333",
 };
+
+export const tileIcons = {
+  0: "square",
+  1: "heart",
+  2: "grid",
+  3: "ice-cream",
+};
