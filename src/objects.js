@@ -37,11 +37,15 @@ class Board {
       this.cols[i] = [];
       for (let j = 0; j < this.size; ++j) {
         // this.cols.push();
-        const color = Math.floor(Math.random() * 4);
-        this.cols[i].push(this.addTile(i, j, color));
+        this.addRandomTile(i, j);
       }
     }
     this.updateConnected();
+  }
+
+  addRandomTile(column, row) {
+    const color = Math.floor(Math.random() * 4);
+    this.cols[column].push(this.addTile(column, row, color));
   }
 
   addTile(column, row, color) {
