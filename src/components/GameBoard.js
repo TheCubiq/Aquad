@@ -1,4 +1,10 @@
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 
 import Tile from "./Tile";
@@ -49,9 +55,50 @@ const GameBoard = (props) => {
     );
   });
 
+  const BtnStartAgain = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          setBoard(new Board(props.size));
+          // ToastAndroid.show("new game started", ToastAndroid.SHORT);
+          // show simple toast that game is reset
+          // ("New game started!");
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: colors.primary,
+          }}
+        >
+          start again
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const BtnMoves = () => {
+    return (
+      <View>
+        <Text
+          style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: colors.primary,
+          }}
+        >
+          moves: {board.moves}
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <>
+      <BtnStartAgain />
       <View style={styles.map}>{cols}</View>
+      <BtnMoves />
     </>
   );
 };
