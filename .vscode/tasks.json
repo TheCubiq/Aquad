@@ -9,6 +9,13 @@
 			"problemMatcher": []
 		},
 		{
+			"label": "[Expo] run on android and web",
+			"type": "shell",
+			"command": "expo r -a -w",
+			"detail": "run the app on android and web",
+			"problemMatcher": []
+		},
+		{
 			"label": "[Expo] run on android [clear cache]",
 			"type": "shell",
 			"command": "expo r -a -c",
