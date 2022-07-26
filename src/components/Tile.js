@@ -3,13 +3,15 @@ import React, { useEffect } from "react";
 import { colors, tileIcons } from "./../constants";
 import Animated, {
   FadeIn,
+  FadeInDown,
   FadeOut,
+  FlipInEasyX,
+  FlipInEasyY,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -19,7 +21,8 @@ import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
 const SPRING_CONF = {
   stiffness: 300,
   damping: 20,
-  // mass: 1,
+  // mass: 0.50,
+  // duration: 100,
   // overshootClamping: true,
 };
 
@@ -38,27 +41,30 @@ const TileStatus = ({ tile }) => {
 
 const Tile = (props) => {
   const { tile, tileS } = props;
-  // const width = (windowWidth > 600) ? 600 : windowWidth;
 
-  // const row = useSharedValue(-tile.row * tileS);
-  const row = useSharedValue(tileS);
+  const row = useDerivedValue(() => {
+    // return withTiming((tile.row + 1) * -tileS, SPRING_CONF);
+    // return (tile.row + 1) * -tileS;
+    return withSpring(tile.row, SPRING_CONF);
+    // return tile.row;
+  });
 
   const connected = useDerivedValue(() => {
     return withTiming(tile.connected ? 1 : 0, { duration: 500 });
   });
 
-  const iconColor = useDerivedValue(() => {
-    return interpolateColor(
-      connected.value,
-      [0, 1],
-      [colors[`tile_${tile.color}`], colors.bg]
-      // ["red", "green"]
-    );
-  });
+  // const iconColor = useDerivedValue(() => {
+  //   return interpolateColor(
+  //     connected.value,
+  //     [0, 1],
+  //     [colors[`tile_${tile.color}`], colors.bg]
+  //     // ["red", "green"]
+  //   );
+  // });
 
-  useEffect(() => {
-    row.value = -tile.row * tileS;
-  });
+  // useEffect(() => {
+  // row.value = -tile.row * tileS;
+  // });
 
   const iconConnected = useAnimatedStyle(() => {
     return {
@@ -112,15 +118,11 @@ const Tile = (props) => {
     const shadowColor = backgroundColor;
     const borderRadius = tileS / 2.5;
 
+    const bottom = interpolate(row.value, [0, 1], [0, tileS]);
+
     return {
-      transform: [
-        {
-          translateY: withSpring(row.value, SPRING_CONF),
-        },
-        {
-          scale: 0.8,
-        },
-      ],
+      // top: withSpring(row.value, SPRING_CONF),
+      bottom,
       borderWidth,
       backgroundColor,
       shadowColor,
@@ -135,31 +137,38 @@ const Tile = (props) => {
       }}
     >
       <Animated.View
-        // entering={FadeIn}
-        style={[
-          styles.tile,
-          {
-            borderColor: colors[`tile_${tile.color}`],
-            width: tileS,
-          },
-          tileStyle,
-        ]}
-        exiting={FadeOut}
+        // style={{ position: "absolute" }}
+        entering={FlipInEasyY.delay(
+          500 + 50 * (tile.row + tile.column)
+        ).duration(500)}
+        exiting={FadeOut.delay(1)}
       >
-        <Animated.View style={relativeIconSize}>
-          <Animated.View style={iconConnected}>
-            <Ionicons
-              name={tileIcons[tile.color]}
-              size={40} 
-              color={colors.bg} 
-            />
-          </Animated.View>
-          <Animated.View style={[iconNotConnected, { position: "absolute" }]}>
-            <Ionicons
-              name={tileIcons[tile.color]}
-              size={40}
-              color={colors[`tile_${tile.color}`]}
-            />
+        <Animated.View
+          style={[
+            styles.tile,
+            {
+              borderColor: colors[`tile_${tile.color}`],
+              width: tileS,
+            },
+            tileStyle,
+          ]}
+          // entering={FadeIn.delay(500+10*(tile.row*2)).duration(500)}
+        >
+          <Animated.View style={relativeIconSize}>
+            <Animated.View style={iconConnected}>
+              <Ionicons
+                name={tileIcons[tile.color]}
+                size={40}
+                color={colors.bg}
+              />
+            </Animated.View>
+            <Animated.View style={[iconNotConnected, { position: "absolute" }]}>
+              <Ionicons
+                name={tileIcons[tile.color]}
+                size={40}
+                color={colors[`tile_${tile.color}`]}
+              />
+            </Animated.View>
           </Animated.View>
         </Animated.View>
       </Animated.View>
@@ -185,6 +194,12 @@ const styles = StyleSheet.create({
     elevation: 10,
 
     overflow: "hidden",
+
+    transform: [
+      {
+        scale: 0.8,
+      },
+    ],
   },
   tileText: {
     position: "absolute",
