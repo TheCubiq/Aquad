@@ -21,31 +21,21 @@ class Tile {
   }
 
   hasConnections() {
-    return this.connectedTo.length > 1
+    return this.connectedTo.length > 1;
   }
 }
 
 class Board {
   constructor(size) {
-    this.id = Math.random();
-    this.cols = [];
     // this.tiles = [];
-    this.size = size || 4;
-    this.moves = 0;
-
-    for (let i = 0; i < this.size; ++i) {
-      this.cols[i] = [];
-      for (let j = 0; j < this.size; ++j) {
-        // this.cols.push();
-        this.addRandomTile(i, j);
-      }
-    }
-    this.updateConnected();
+    this.id = Math.random();
+    this.loadGame(size);
+    // this.updateConnected();
   }
 
   addRandomTile(column, row) {
     const color = Math.floor(Math.random() * 4);
-    this.cols[column].push(this.addTile(column, row, color));
+    return this.addTile(column, row, color);
   }
 
   addTile(column, row, color) {
@@ -186,13 +176,69 @@ class Board {
     // console.log("\n\n\n\n AHOJ");
     // console.log(tile.column, tile.row, tile);
     // console.log(tile.isParent());
+    // tile.color = Math.floor(Math.random() * 4);
+
+    // tile.color = (tile.color + 1) % 4;
+
+    // change randomly the tile color to a new one (not to the same as the one it already has)
+    // const oldColor = tile.color;
+    // while (tile.color === oldColor) {
+    //   tile.color = Math.floor(Math.random() * 4);
+    // }
+
     if (tile.connected) {
       this.moves++;
       this.removeTile2(tile);
-      this.updateColumns();
-      this.disconnectAll();
-      this.updateConnected();
     }
+    this.boardUpdate();
+
+    return this;
+  }
+
+  boardUpdate() {
+    this.updateColumns();
+    this.disconnectAll();
+    this.updateConnected();
+  }
+
+  saveGameTiles() {
+    // save the state of the game
+    // return an array of arrays of tile colors
+    let gameTiles = [];
+    
+    for (let i = 0; i < this.size; ++i) {
+      let columnTiles = [];
+      for (let j = 0; j < this.size; ++j) {
+        // this.cols.push();
+        const tile = this.getTile(i, j);
+        columnTiles.push(tile ? tile.color : "e");
+      }
+      gameTiles.push(columnTiles);
+    }
+
+    return gameTiles;
+  }
+
+  loadGame(boardSize, gameTiles, newBoard = true, maxMoves = 20) {
+    // load the state of the game
+    // gameTiles is an array of arrays of tile colors
+    if (newBoard) this.id = Math.random();
+    this.size = boardSize || 5;
+    this.moves = 0;
+    this.maxMoves = maxMoves;
+    this.cols = [];
+    for (let i = 0; i < this.size; ++i) {
+      this.cols[i] = [];
+      for (let j = 0; j < this.size; ++j) {
+        // this.cols.push();
+        gameTiles
+          ? this.cols[i].push(this.addTile(i, j, gameTiles[i][j]))
+          : this.cols[i].push(this.addRandomTile(i, j));
+      }
+    }
+
+    this.boardUpdate();
+
     return this;
   }
 

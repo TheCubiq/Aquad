@@ -9,10 +9,11 @@ import React, { useState } from "react";
 
 import Tile from "./Tile";
 import { Board } from "../objects";
-import { colors } from "./../constants";
+import { colors, tileEmojis } from "./../constants";
 
 const GameBoard = (props) => {
   const [board, setBoard] = useState(new Board(props.size));
+  const [saveGame, setSaveGame] = useState(board.saveGameTiles());
 
   const [tileWidth, setTileWidth] = useState(84);
 
@@ -23,7 +24,89 @@ const GameBoard = (props) => {
 
   const newGame = () => {
     setBoard(new Board(props.size));
-  }
+    setSaveGame(board.saveGameTiles());
+  };
+
+  const loadNewGame = () => {
+    // const game = "1013023022210010202233131"
+    const game = "101302302221001020223313111111111111";
+    loadGame(game, true);
+  };
+
+  const resetBoard = () => {
+    // const game = "1013023022210010202233131"
+    const game = toSaveStateString(saveGame);
+    console.log(game);
+    loadGame(game, false);
+  };
+
+  const loadGame = (gameBoard, reload) => {
+    // ToastAndroid.show("Load game", ToastAndroid.SHORT);
+
+    const brd = stringToBoard(gameBoard);
+    // console.log(brd);
+
+    let newBoard = copyBoard(board).loadGame(brd.size, brd.tiles, reload, 25);
+    setSaveGame(newBoard.saveGameTiles());
+    setBoard(newBoard);
+  };
+
+  const stringToBoard = (string) => {
+    // split string into array of strings
+    const boardSize = Math.sqrt(string.length);
+    let board = [];
+    // const boardString = string.split("");
+    for (let i = 0; i < boardSize; ++i) {
+      let columnTiles = [];
+      for (let j = 0; j < boardSize; ++j) {
+        columnTiles.push(string[i * boardSize + j]);
+      }
+      board.push(columnTiles);
+    }
+
+    const boardProps = { size: boardSize, tiles: board, maxMoves: 0 };
+    // console.log(boardSize)
+    // console.log(board);
+    return boardProps;
+  };
+
+  const saveGameProgress = () => {
+    // ToastAndroid.show("Saving game...", ToastAndroid.SHORT);
+    console.log("Saving game...");
+    // console.log(JSON.stringify(saveGame));
+    console.log(saveGame);
+    // console.log(toSaveStateString(saveGame));
+    shareGame(saveGame);
+  };
+
+  const shareGame = (saveGame) => {
+    console.log(toEmojis(saveGame));
+    alert(toEmojis(saveGame));
+  };
+
+  const toSaveStateString = (gameBoard) => {
+    let saveState = "";
+    for (let i = 0; i < gameBoard.length; ++i) {
+      for (let j = 0; j < gameBoard[i].length; ++j) {
+        saveState += gameBoard[i][j];
+      }
+    }
+    // const boardSize = Math.sqrt(saveState.length);
+    // saveState += `\n${boardSize} x ${boardSize}`;
+    return saveState;
+  };
+
+  const toEmojis = (gameBoard) => {
+    const emojiBoard = gameBoard
+      .map((column, i) =>
+        column
+          .map((tile, j) => tileEmojis[gameBoard[j][column.length - 1 - i]])
+          .join("")
+      )
+      // .filter((column) => column)
+      .join("\n");
+    return emojiBoard;
+  };
 
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
@@ -93,7 +176,7 @@ const GameBoard = (props) => {
             color: colors.primary,
           }}
         >
-          moves: {board.moves}
+          moves: {board.moves}/{board.maxMoves}
         </Text>
       </View>
     );
@@ -101,10 +184,12 @@ const GameBoard = (props) => {
 
   return (
     <>
-      <MyCustomBtn title={"Start Again"} pressAction={newGame} />
+      <MyCustomBtn title={"New Game"} pressAction={newGame} />
       <View style={styles.map}>{cols}</View>
       <BtnMoves />
-      <MyCustomBtn title={"Pog Btn"} pressAction={newGame} />
+      <MyCustomBtn title={"showEmoji"} pressAction={saveGameProgress} />
+      <MyCustomBtn title={"Reset"} pressAction={resetBoard} />
+      <MyCustomBtn title={"load game"} pressAction={loadNewGame} />
     </>
   );
 };
