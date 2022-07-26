@@ -170,6 +170,7 @@ const Tile = (props) => {
               />
             </Animated.View>
           </Animated.View>
+          {/* <TileStatus tile={tile} /> */}
         </Animated.View>
       </Animated.View>
     </TouchableWithoutFeedback>
