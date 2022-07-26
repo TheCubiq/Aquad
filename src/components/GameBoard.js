@@ -21,6 +21,10 @@ const GameBoard = (props) => {
     setTileWidth(width);
   };
 
+  const newGame = () => {
+    setBoard(new Board(props.size));
+  }
+
   const copyBoard = (board) => {
     return Object.assign(Object.create(Object.getPrototypeOf(board)), board);
   };
