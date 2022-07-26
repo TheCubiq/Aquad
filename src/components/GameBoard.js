@@ -59,11 +59,12 @@ const GameBoard = (props) => {
     );
   });
 
-  const BtnStartAgain = () => {
+  const MyCustomBtn = (props) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          setBoard(new Board(props.size));
+          // setBoard(new Board(props.size));
+          props.pressAction();
           // ToastAndroid.show("new game started", ToastAndroid.SHORT);
           // show simple toast that game is reset
           // ("New game started!");
@@ -76,7 +77,7 @@ const GameBoard = (props) => {
             color: colors.primary,
           }}
         >
-          start again
+          {props.title}
         </Text>
       </TouchableOpacity>
     );
@@ -100,9 +101,10 @@ const GameBoard = (props) => {
 
   return (
     <>
-      <BtnStartAgain />
+      <MyCustomBtn title={"Start Again"} pressAction={newGame} />
       <View style={styles.map}>{cols}</View>
       <BtnMoves />
+      <MyCustomBtn title={"Pog Btn"} pressAction={newGame} />
     </>
   );
 };
