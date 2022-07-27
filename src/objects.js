@@ -184,7 +184,7 @@ class Board {
     return gameTiles;
   }
 
-  loadGame(boardSize = 5, gameTiles, newBoard = true, maxMoves = 20) {
+  loadGame(boardSize = 5, gameTiles, newBoard = true, maxMoves = 10) {
     // load the state of the game
     // gameTiles is an array of arrays of tile colors
     if (newBoard) this.id = Math.random();
