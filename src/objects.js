@@ -49,18 +49,6 @@ class Board {
   }
 
   removeTile(tile) {
-    // remove all tiles that are connected to this tile
-    tile.active = false;
-    // console.log(tile);
-    // console.log(tile.connectedList);
-
-    tile.connectedList.forEach((connectedTile) => {
-      // console.log(connectedTile);
-      this.removeTile(this.getTile(connectedTile[0], connectedTile[1]));
-    });
-  }
-
-  removeTile2(tile) {
     // get the parent tile and remove each tile that is connected to it including the parent tile
     const parent = tile.isParent()
       ? tile
@@ -84,7 +72,7 @@ class Board {
     });
   }
 
-  updateConnected() {
+  updateConnections() {
     // 1. we check the last tile in each column
     // 2. we set that tile to active and check its neighbors
     // 3. if any of the neighbors have the same color, we add the tile to the connected list
@@ -94,16 +82,9 @@ class Board {
     // 7. we repeat steps 1-6 until we check all columns
     // 8. we then check each tile in each connected list and set its connected property to true
 
-    // for (let i = 0; i < this.size; ++i) {
-    //   if (this.cols[i].length > 0) {
-    //     this.checkNeighbors2(this.getTile(i, 0));
-    //     // console.log(this.cols[i].length);
-    //   }
-    // }
-
     this.cols.forEach((column) => {
       if (column.length > 0) {
-        this.checkNeighbors2(column[0]);
+        this.checkNeighbors(column[0]);
       }
     });
   }
@@ -126,30 +107,29 @@ class Board {
     return neighbors;
   }
 
-  // alternative function to "checkNeighbors"
-  // the difference is that this function doesn't write each tile to the connectedList
-  // it does connected list for only "parent tiles" (tiles in the bottom (row = 0) of the column)
+  // this function doesn't write each tile to the connectedList
+  // it creates connected list for only "parent/master tiles" (tiles in the bottom (row = 0) of the column)
   // function has an additional parameter "parent"
   // neighbors will be always added to the parent tile's connectedList
   // neighbors lead to the parent tile using the "connectedTo" property
-  checkNeighbors2(tile, parent = null) {
-    // check if the tile is not connected
-    // if (!tile.connected) {
+  checkNeighbors(tile, parent = null) {
     let neighbors = this.getNeighbors(tile);
-    // filter neighbors that are undefined and
-    // the neighbors with tiles that have the same color and are not connected
+    // filter neighbors that are undefined,
+    // the neighbors with tiles that have the same color
+    // and are not connected
     neighbors = neighbors.filter(
       (neighbor) =>
         neighbor !== undefined &&
         neighbor.color === tile.color &&
         !neighbor.connected
     );
+
     neighbors.forEach((neighbor) => {
       const connection = parent || tile;
       neighbor.connectedTo = [connection.column, connection.row];
       connection.connectedList.push([neighbor.column, neighbor.row]);
       neighbor.connected = true;
-      this.checkNeighbors2(neighbor, connection);
+      this.checkNeighbors(neighbor, connection);
     });
 
     if (tile.row === 0) {
@@ -161,7 +141,8 @@ class Board {
     }
     // }
   }
-  disconnectAll() {
+
+  disconnectAllTiles() {
     // set all tiles to not connected
     this.cols.forEach((column) => {
       column.forEach((tile) => {
@@ -173,22 +154,12 @@ class Board {
   }
 
   clicked(tile) {
-    // console.log("\n\n\n\n AHOJ");
     // console.log(tile.column, tile.row, tile);
-    // console.log(tile.isParent());
-    // tile.color = Math.floor(Math.random() * 4);
-
     // tile.color = (tile.color + 1) % 4;
-
-    // change randomly the tile color to a new one (not to the same as the one it already has)
-    // const oldColor = tile.color;
-    // while (tile.color === oldColor) {
-    //   tile.color = Math.floor(Math.random() * 4);
-    // }
 
     if (tile.connected) {
       this.moves++;
-      this.removeTile2(tile);
+      this.removeTile(tile);
     }
     this.boardUpdate();
 
@@ -197,8 +168,8 @@ class Board {
 
   boardUpdate() {
     this.updateColumns();
-    this.disconnectAll();
-    this.updateConnected();
+    this.disconnectAllTiles();
+    this.updateConnections();
   }
 
   saveGameTiles() {
