@@ -65,7 +65,7 @@ const GameBoard = (props) => {
     return boardProps;
   };
 
-  const saveGameProgress = () => {
+  const showSave = () => {
     // ToastAndroid.show("Saving game...", ToastAndroid.SHORT);
     console.log("Game save:");
     const saveGame = board.saveGame;
@@ -181,7 +181,7 @@ const GameBoard = (props) => {
       <MyCustomBtn title={"New Game"} pressAction={newGame} />
       <View style={styles.map}>{cols}</View>
       <BtnMoves />
-      <MyCustomBtn title={"showEmoji"} pressAction={saveGameProgress} />
+      <MyCustomBtn title={"showEmoji"} pressAction={showSave} />
       <MyCustomBtn title={"Reset"} pressAction={resetBoard} />
       <MyCustomBtn title={"load game"} pressAction={loadNewGame} />
     </>
