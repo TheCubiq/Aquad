@@ -13,7 +13,6 @@ import { colors, tileEmojis } from "./../constants";
 
 const GameBoard = (props) => {
   const [board, setBoard] = useState(new Board(props.size));
-  const [saveGame, setSaveGame] = useState(board.saveGameTiles());
 
   const [tileWidth, setTileWidth] = useState(84);
 
@@ -24,30 +23,26 @@ const GameBoard = (props) => {
 
   const newGame = () => {
     setBoard(new Board(props.size));
-    setSaveGame(board.saveGameTiles());
   };
 
   const loadNewGame = () => {
+    // todo : load game as "game,moves"
+    //        so as ex: 1010,10
+    const game = "1010";
     // const game = "1013023022210010202233131"
-    const game = "101302302221001020223313111111111111";
+    // const game = "101302302221001020223313111111111111";
     loadGame(game, true);
   };
 
   const resetBoard = () => {
-    // const game = "1013023022210010202233131"
-    const game = toSaveStateString(saveGame);
-    console.log(game);
-    loadGame(game, false);
+    const saveGame = toSaveStateString(board.saveGame);
+    console.log(saveGame);
+    loadGame(saveGame, false);
   };
 
   const loadGame = (gameBoard, reload) => {
-    // ToastAndroid.show("Load game", ToastAndroid.SHORT);
-
     const brd = stringToBoard(gameBoard);
-    // console.log(brd);
-
-    let newBoard = copyBoard(board).loadGame(brd.size, brd.tiles, reload, 25);
-    setSaveGame(newBoard.saveGameTiles());
+    let newBoard = copyBoard(board).loadGame(brd.size, brd.tiles, reload);
     setBoard(newBoard);
   };
 
@@ -72,10 +67,9 @@ const GameBoard = (props) => {
 
   const saveGameProgress = () => {
     // ToastAndroid.show("Saving game...", ToastAndroid.SHORT);
-    console.log("Saving game...");
-    // console.log(JSON.stringify(saveGame));
-    console.log(saveGame);
-    // console.log(toSaveStateString(saveGame));
+    console.log("Game save:");
+    const saveGame = board.saveGame;
+    console.log(toSaveStateString(saveGame));
     shareGame(saveGame);
   };
 

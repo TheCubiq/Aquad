@@ -197,6 +197,8 @@ class Board {
 
     this.boardUpdate();
 
+    this.saveGame = this.saveGameTiles();
+
     return this;
   }
 
