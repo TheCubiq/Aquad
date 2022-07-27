@@ -33,14 +33,8 @@ class Board {
     // this.updateConnected();
   }
 
-  addRandomTile(column, row) {
-    const color = Math.floor(Math.random() * 4);
-    return this.addTile(column, row, color);
-  }
-
-  addTile(column, row, color) {
-    let tile = new Tile(column, row, color);
-    return tile;
+  randomColor() {
+    return Math.floor(Math.random() * 4);
   }
 
   getTile(column, row) {
@@ -190,27 +184,31 @@ class Board {
     return gameTiles;
   }
 
-  loadGame(boardSize, gameTiles, newBoard = true, maxMoves = 20) {
+  loadGame(boardSize = 5, gameTiles, newBoard = true, maxMoves = 20) {
     // load the state of the game
     // gameTiles is an array of arrays of tile colors
     if (newBoard) this.id = Math.random();
-    this.size = boardSize || 5;
-    this.moves = 0;
+    this.size = boardSize;
+    this.moves = 0; // reset the moves
     this.maxMoves = maxMoves;
     this.cols = [];
-    for (let i = 0; i < this.size; ++i) {
-      this.cols[i] = [];
-      for (let j = 0; j < this.size; ++j) {
-        // this.cols.push();
-        gameTiles
-          ? this.cols[i].push(this.addTile(i, j, gameTiles[i][j]))
-          : this.cols[i].push(this.addRandomTile(i, j));
-      }
-    }
+
+    this.fillBoard(gameTiles);
 
     this.boardUpdate();
 
     return this;
+  }
+
+  fillBoard(gameTiles) {
+    for (let i = 0; i < this.size; ++i) {
+      this.cols[i] = [];
+      for (let j = 0; j < this.size; ++j) {
+        this.cols[i].push(
+          new Tile(i, j, gameTiles?.[i]?.[j] || this.randomColor())
+        );
+      }
+    }
   }
 
   setPositions() {
