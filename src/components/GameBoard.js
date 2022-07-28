@@ -25,6 +25,7 @@ const GameBoard = (props) => {
     setBoard(new Board(props.size));
   };
 
+  // eslint-disable-next-line no-unused-vars
   const loadNewGame = () => {
     // todo : load game as "game,moves"
     //        so as ex: 1010,10

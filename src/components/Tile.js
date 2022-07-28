@@ -95,6 +95,7 @@ const Tile = (props) => {
     };
   });
 
+  // eslint-disable-next-line no-unused-vars
   const tileInside = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       connected.value,
