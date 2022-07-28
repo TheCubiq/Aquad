@@ -12,6 +12,8 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withRepeat,
+  withSequence,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -41,6 +43,8 @@ const TileStatus = ({ tile }) => {
 
 const Tile = (props) => {
   const { tile, tileS } = props;
+
+  const tileShake = useSharedValue(0);
 
   const row = useDerivedValue(() => {
     // return withTiming((tile.row + 1) * -tileS, SPRING_CONF);
@@ -83,6 +87,9 @@ const Tile = (props) => {
       transform: [
         {
           scale: tileS / 100,
+        },
+        {
+          rotateZ: `${tileShake.value}deg`,
         },
       ],
     };
@@ -130,6 +137,15 @@ const Tile = (props) => {
     };
   });
 
+  function triggerShake() {
+    const speed = {duration:100};
+    tileShake.value = withSequence(
+      withTiming(-10,speed),
+      withRepeat(withTiming(10,speed), 4, true),
+      withTiming(0,speed)
+    );
+  }
+
   return (
     <Animated.View
       // style={{ position: "absolute" }}
@@ -140,7 +156,11 @@ const Tile = (props) => {
     >
       <TouchableWithoutFeedback
         onPress={() => {
-        props.onTileClick(tile);
+          if (tile.connected) {
+            props.onTileClick(tile);
+          } else {
+            triggerShake();
+          }
         }}
       >
         <Animated.View
