@@ -153,6 +153,7 @@ const Tile = (props) => {
       exiting={FadeOut.delay(1)}
     >
       <TouchableWithoutFeedback
+        touchSoundDisabled={true}
         onPress={() => {
           if (tile.connected) {
             props.onTileClick(tile);
