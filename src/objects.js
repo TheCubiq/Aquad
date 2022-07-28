@@ -215,7 +215,7 @@ class Board {
       this.cols[i] = [];
       for (let j = 0; j < this.size; ++j) {
         this.cols[i].push(
-          new Tile(i, j, gameTiles?.[i]?.[j] || this.randomColor())
+          new Tile(i, j, gameTiles?.[i]?.[j] ?? this.randomColor())
         );
       }
     }
