@@ -107,6 +107,13 @@ class Board {
     return neighbors;
   }
 
+  hasWon() {
+    // check if the game is won
+    // check if there are any active tiles
+    // return this.cols.every((column) => column.every((tile) => tile.active));
+    return this.cols.every((column) => column.every((tile) => tile.active === false));
+  }
+
   // this function doesn't write each tile to the connectedList
   // it creates connected list for only "parent/master tiles" (tiles in the bottom (row = 0) of the column)
   // function has an additional parameter "parent"
@@ -164,6 +171,10 @@ class Board {
       }
     } else console.log("no moves left");
     this.boardUpdate();
+
+    if (this.hasWon()) {
+      alert("You won!");
+    }
 
     return this;
   }
