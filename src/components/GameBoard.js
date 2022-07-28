@@ -110,9 +110,6 @@ const GameBoard = (props) => {
   };
 
   const onTileClick = (tile) => {
-    // if (board.hasWon()) {
-    //   return;
-    // }
     let newBoard = copyBoard(board).clicked(tile);
     setBoard(newBoard); // update the board
   };
@@ -184,9 +181,9 @@ const GameBoard = (props) => {
       <MyCustomBtn title={"New Game"} pressAction={newGame} />
       <View style={styles.map}>{cols}</View>
       <BtnMoves />
-      <MyCustomBtn title={"showEmoji"} pressAction={showSave} />
       <MyCustomBtn title={"Reset"} pressAction={resetBoard} />
-      <MyCustomBtn title={"load game"} pressAction={loadNewGame} />
+      {/* <MyCustomBtn title={"load game"} pressAction={loadNewGame} /> */}
+      <MyCustomBtn title={"showEmoji"} pressAction={showSave} />
     </>
   );
 };
