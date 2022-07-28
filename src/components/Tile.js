@@ -1,11 +1,8 @@
 import { StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { colors, tileIcons } from "./../constants";
 import Animated, {
-  FadeIn,
-  FadeInDown,
   FadeOut,
-  FlipInEasyX,
   FlipInEasyY,
   interpolate,
   interpolateColor,
@@ -18,7 +15,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { AntDesign, Octicons, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const SPRING_CONF = {
   stiffness: 300,
