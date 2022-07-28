@@ -36,7 +36,7 @@ const GameBoard = (props) => {
 
   const resetBoard = () => {
     const saveGame = board.saveGame;
-    console.log(saveGame);
+    // console.log(saveGame);
     loadGame(saveGame, false);
   };
 

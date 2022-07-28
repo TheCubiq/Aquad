@@ -212,7 +212,7 @@ class Board {
 
   fillBoard(gameTiles) {
     for (let i = 0; i < this.size; ++i) {
-      this.cols[i] = [];
+      this.cols.push([]);
       for (let j = 0; j < this.size; ++j) {
         this.cols[i].push(
           new Tile(i, j, gameTiles?.[i]?.[j] ?? this.randomColor())
