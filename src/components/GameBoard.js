@@ -35,14 +35,21 @@ const GameBoard = (props) => {
   };
 
   const resetBoard = () => {
-    const saveGame = toSaveStateString(board.saveGame);
+    const saveGame = board.saveGame;
     console.log(saveGame);
     loadGame(saveGame, false);
   };
 
   const loadGame = (gameBoard, reload) => {
-    const brd = stringToBoard(gameBoard);
-    let newBoard = copyBoard(board).loadGame(brd.size, brd.tiles, reload);
+    // check the type of gameBoard
+    // if it is a string, we need to convert it to board
+    const brd =
+      typeof gameBoard === "string" ? stringToBoard(gameBoard) : gameBoard;
+    let newBoard = copyBoard(board).loadGame(
+      brd.length,
+      brd,
+      reload
+    );
     setBoard(newBoard);
   };
 
@@ -58,11 +65,7 @@ const GameBoard = (props) => {
       }
       board.push(columnTiles);
     }
-
-    const boardProps = { size: boardSize, tiles: board, maxMoves: 0 };
-    // console.log(boardSize)
-    // console.log(board);
-    return boardProps;
+    return board;
   };
 
   const showSave = () => {
