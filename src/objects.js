@@ -53,6 +53,11 @@ class Board {
     parent.active = false;
   }
 
+  checkMoves() {
+    // check if there are any moves left
+    return this.moves < this.maxMoves;
+  }
+
   updateColumns() {
     // update the position of all tiles
     // filter out tiles that are not active
@@ -75,12 +80,13 @@ class Board {
     // 6. we then check the next column and repeat steps 1-5
     // 7. we repeat steps 1-6 until we check all columns
     // 8. we then check each tile in each connected list and set its connected property to true
-
-    this.cols.forEach((column) => {
-      if (column.length > 0) {
-        this.checkNeighbors(column[0]);
-      }
-    });
+    if (this.checkMoves()) {
+      this.cols.forEach((column) => {
+        if (column.length > 0) {
+          this.checkNeighbors(column[0]);
+        }
+      });
+    }
   }
 
   getNeighbors(tile) {
@@ -126,7 +132,7 @@ class Board {
       this.checkNeighbors(neighbor, connection);
     });
 
-    if (tile.row === 0) {
+    if (tile.row === 0 || this.checkMoves()) {
       tile.connected = true;
       // tile.connectedTo = [tile.column, tile.row];
     }
@@ -151,10 +157,12 @@ class Board {
     // console.log(tile.column, tile.row, tile);
     // tile.color = (tile.color + 1) % 4;
 
-    if (tile.connected) {
-      this.moves++;
-      this.removeTile(tile);
-    }
+    if (this.checkMoves()) {
+      if (tile.connected) {
+        this.moves++;
+        this.removeTile(tile);
+      }
+    } else console.log("no moves left");
     this.boardUpdate();
 
     return this;
