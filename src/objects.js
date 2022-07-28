@@ -139,7 +139,7 @@ class Board {
       this.checkNeighbors(neighbor, connection);
     });
 
-    if (tile.row === 0 || this.checkMoves()) {
+    if (tile.row === 0) {
       tile.connected = true;
       // tile.connectedTo = [tile.column, tile.row];
     }
@@ -169,7 +169,7 @@ class Board {
         this.moves++;
         this.removeTile(tile);
       }
-    } else console.log("no moves left");
+    } else alert("No moves left!");
     this.boardUpdate();
 
     if (this.hasWon()) {
