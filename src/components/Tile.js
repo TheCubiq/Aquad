@@ -131,17 +131,17 @@ const Tile = (props) => {
   });
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        props.onTileClick(tile);
-      }}
+    <Animated.View
+      // style={{ position: "absolute" }}
+      entering={FlipInEasyY.delay(500 + 50 * (tile.row + tile.column)).duration(
+        500
+      )}
+      exiting={FadeOut.delay(1)}
     >
-      <Animated.View
-        // style={{ position: "absolute" }}
-        entering={FlipInEasyY.delay(
-          500 + 50 * (tile.row + tile.column)
-        ).duration(500)}
-        exiting={FadeOut.delay(1)}
+      <TouchableWithoutFeedback
+        onPress={() => {
+        props.onTileClick(tile);
+        }}
       >
         <Animated.View
           style={[
@@ -172,8 +172,8 @@ const Tile = (props) => {
           </Animated.View>
           {/* <TileStatus tile={tile} /> */}
         </Animated.View>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 
