@@ -1,19 +1,37 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import Tile from "./Tile";
 import { Board } from "../objects";
 import { colors, tileEmojis } from "./../constants";
+import { Audio } from "expo-av";
 
 const GameBoard = (props) => {
   const [board, setBoard] = useState(new Board(props.size));
 
   const [tileWidth, setTileWidth] = useState(84);
+
+  const [currentTileSound, setTileSound] = useState();
+  const [music, setMusic] = useState();
+
+  const soundPaths = {
+    A: [
+      require("../../assets/sounds/style1/tileFeedback/0A.mp3"),
+      require("../../assets/sounds/style1/tileFeedback/1A.mp3"),
+      require("../../assets/sounds/style1/tileFeedback/2A.mp3"),
+      require("../../assets/sounds/style1/tileFeedback/3A.mp3"),
+    ],
+    I: [
+      require("../../assets/sounds/style1/tileFeedback/0I.mp3"),
+      require("../../assets/sounds/style1/tileFeedback/1I.mp3"),
+      require("../../assets/sounds/style1/tileFeedback/2I.mp3"),
+      require("../../assets/sounds/style1/tileFeedback/3I.mp3"),
+    ],
+  };
+
+  // useEffect(() => {
+  //   return currentTileSound ? () => currentTileSound.unloadAsync() : undefined;
+  // }, [currentTileSound]);
 
   const onLayout = (event) => {
     const { width } = event.nativeEvent.layout;
@@ -112,7 +130,31 @@ const GameBoard = (props) => {
   const onTileClick = (tile) => {
     let newBoard = copyBoard(board).clicked(tile);
     setBoard(newBoard); // update the board
+    playTile(tile);
   };
+
+  // const playTile = async ({ color = 0, connected = false }) => {
+  //   // play the tile sound using the expo sound module
+  //   console.log("Tile start");
+  //   const { sound } = await Audio.Sound.createAsync(
+  //     await soundPaths[connected ? "A" : "I"][color]
+  //   );
+
+  //   setSound(sound);
+  //   await sound.playAsync();
+
+  //   // await sound.unloadAsync();
+  //   console.log("Tile sound played");
+  // };
+
+  const playTile = useCallback(async ({ color = 0, connected = false }) => {
+    // play the tile sound using the expo sound module
+    const { sound } = await Audio.Sound.createAsync(
+      await soundPaths[connected ? "A" : "I"][color]
+    );
+    setTileSound(sound);
+    await sound.playAsync();
+  }, []);
 
   const cols = board.cols.map((col, index) => {
     return (
