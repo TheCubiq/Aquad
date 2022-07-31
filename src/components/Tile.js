@@ -155,11 +155,12 @@ const Tile = (props) => {
       <TouchableWithoutFeedback
         touchSoundDisabled={true}
         onPress={() => {
-          if (tile.connected) {
-            props.onTileClick(tile);
-          } else {
+          if (!tile.connected) {
             triggerShake();
           }
+          // } else {
+            props.onTileClick(tile);
+          // }
         }}
       >
         <Animated.View
