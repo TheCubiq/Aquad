@@ -18,7 +18,8 @@
     "react-native-web": "0.17.7",
     "react-native-reanimated": "~2.8.0",
     "react-native-gesture-handler": "~2.2.1",
-    "expo-updates": "~0.13.3"
+    "expo-updates": "~0.13.3",
+    "expo-av": "~11.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
