@@ -169,7 +169,8 @@ class Board {
         this.moves++;
         this.removeTile(tile);
       }
-    } else alert("No moves left!");
+    } 
+    // else alert("No moves left!");
     this.boardUpdate();
 
     if (this.hasWon()) {
