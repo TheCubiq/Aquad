@@ -63,11 +63,7 @@ const GameBoard = (props) => {
     // if it is a string, we need to convert it to board
     const brd =
       typeof gameBoard === "string" ? stringToBoard(gameBoard) : gameBoard;
-    let newBoard = copyBoard(board).loadGame(
-      brd.length,
-      brd,
-      reload
-    );
+    let newBoard = copyBoard(board).loadGame(brd.length, brd, reload);
     setBoard(newBoard);
   };
 
