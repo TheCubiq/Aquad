@@ -235,7 +235,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     maxWidth: 420,
     borderRadius: 30,
-    backgroundColor: colors.bg,
+    // backgroundColor: colors.bg,
+      backgroundColor: colors.board_bg,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     shadowRadius: 9.51,
 
     elevation: 15,
-    // padding: 30,
+    padding: 5,
   },
   column: {
     // backgroundColor: "#f700ff5e",
