@@ -1,4 +1,5 @@
 # Aquad
 ## todo's:   
-  game menus  
-  save/load board
+  ✅save/load board
+  add skia t make the app go 🚀
+  game menus
