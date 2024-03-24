@@ -26,17 +26,17 @@ const SPRING_CONF = {
 };
 
 // eslint-disable-next-line no-unused-vars
-const TileStatus = ({ tile }) => {
-  return (
-    <Text style={styles.tileText}>
-      {tile.hasConnections()
-        ? tile.isParent()
-          ? "master\n" + (tile.connectedList.length || "none")
-          : "slave"
-        : ""}
-    </Text>
-  );
-};
+// const TileStatus = ({ tile }) => {
+//   return (
+//     <Text style={styles.tileText}>
+//       {tile.hasConnections()
+//         ? tile.isParent()
+//           ? "master\n" + (tile.connectedList.length || "none")
+//           : "slave"
+//         : ""}
+//     </Text>
+//   );
+// };
 
 const Tile = (props) => {
   const { tile, tileS } = props;

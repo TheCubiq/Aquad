@@ -160,10 +160,21 @@ const GameBoard = (props) => {
         onLayout={onLayout}
       >
         {col.map((tile) => {
+          // converting to 
+          const data = { 
+            color : tile.color,
+            column : tile.column,
+            row : tile.row,
+            connected : tile.connected,
+            isParent : tile.isParent(),
+            connectedList : tile.connectedList,
+            connectedTo : tile.connectedTo,
+            active : tile.active,
+           };
           return (
             <Tile
               key={(tile.id + 1) * board.id}
-              tile={tile}
+              tile={data}
               size={board.size}
               tileS={tileWidth}
               onTileClick={onTileClick}

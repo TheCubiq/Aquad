@@ -44,9 +44,14 @@ class Board {
 
   removeTile(tile) {
     // get the parent tile and remove each tile that is connected to it including the parent tile
-    const parent = tile.isParent()
-      ? tile
+    
+    const parent = tile.isParent
+      ? this.getTile(tile.column, tile.row)
       : this.getTile(tile.connectedTo[0], tile.connectedTo[1]);
+    
+    console.log(tile.isParent)
+
+
     parent.connectedList.forEach((connectedTile) => {
       this.getTile(connectedTile[0], connectedTile[1]).active = false;
     });
