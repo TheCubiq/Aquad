@@ -5,32 +5,28 @@ class Tile {
     this.color = color || 0;
     this.column = column || 0;
     this.row = row || 0;
-    this.id = row || 0; // give each tile in each column a unique id
-    this.active = true; // if the tile is visible on the board
-    this.connectedList = []; // list of tiles that are connected to this tile
-    this.connected = false; // if the tile is connected to another tile
-    this.connectedTo = []; // the tile that this tile is connected to
-    // this.id = this.id++ || 0;
-    // console.log(this)
+    this.id = row || 0; 
+    this.active = true; 
+    this.connectedList = []; 
+    this.connected = false; 
+    this.connectedTo = {x: -1, y: -1};
   }
   isParent() {
     // it is a parent if connectedTo is the same as its position (row and column)
     return (
-      this.connectedTo[0] === this.column && this.connectedTo[1] === this.row
+      this.connectedTo.x === this.column && this.connectedTo?.y === this.row
     );
   }
 
   hasConnections() {
-    return this.connectedTo.length > 1;
+    return this.connectedTo.x !== -1;
   }
 }
 
 class Board {
   constructor(size) {
-    // this.tiles = [];
     this.id = Math.random();
     this.loadGame(size);
-    // this.updateConnected();
   }
 
   randomColor() {
@@ -47,9 +43,8 @@ class Board {
     
     const parent = tile.isParent
       ? this.getTile(tile.column, tile.row)
-      : this.getTile(tile.connectedTo[0], tile.connectedTo[1]);
+      : this.getTile(tile.connectedTo?.x, tile.connectedTo?.y);
     
-    console.log(tile.isParent)
 
 
     parent.connectedList.forEach((connectedTile) => {
@@ -77,14 +72,6 @@ class Board {
   }
 
   updateConnections() {
-    // 1. we check the last tile in each column
-    // 2. we set that tile to active and check its neighbors
-    // 3. if any of the neighbors have the same color, we add the tile to the connected list
-    // 4. we then call that tile and check its neighbors
-    // 5. we repeat steps 3 and 4 until they don't have any neighbors with the same color
-    // 6. we then check the next column and repeat steps 1-5
-    // 7. we repeat steps 1-6 until we check all columns
-    // 8. we then check each tile in each connected list and set its connected property to true
     if (this.checkMoves()) {
       this.cols.forEach((column) => {
         if (column.length > 0) {
@@ -118,12 +105,8 @@ class Board {
     // return this.cols.every((column) => column.every((tile) => tile.active));
     return this.cols.every((column) => column.every((tile) => tile.active === false));
   }
+  
 
-  // this function doesn't write each tile to the connectedList
-  // it creates connected list for only "parent/master tiles" (tiles in the bottom (row = 0) of the column)
-  // function has an additional parameter "parent"
-  // neighbors will be always added to the parent tile's connectedList
-  // neighbors lead to the parent tile using the "connectedTo" property
   checkNeighbors(tile, parent = null) {
     let neighbors = this.getNeighbors(tile);
     // filter neighbors that are undefined,
@@ -138,7 +121,7 @@ class Board {
 
     neighbors.forEach((neighbor) => {
       const connection = parent || tile;
-      neighbor.connectedTo = [connection.column, connection.row];
+      neighbor.connectedTo = {x:connection.column, y:connection.row};
       connection.connectedList.push([neighbor.column, neighbor.row]);
       neighbor.connected = true;
       this.checkNeighbors(neighbor, connection);
@@ -146,10 +129,9 @@ class Board {
 
     if (tile.row === 0) {
       tile.connected = true;
-      // tile.connectedTo = [tile.column, tile.row];
     }
-    if (tile.connectedTo.length < 1) {
-      tile.connectedTo = [tile.column, tile.row];
+    if (tile.connectedTo.x === -1) {
+      tile.connectedTo = {x: tile.column, y: tile.row};
     }
     // }
   }
@@ -160,15 +142,12 @@ class Board {
       column.forEach((tile) => {
         tile.connected = false;
         tile.connectedList = [];
-        tile.connectedTo = [];
+        tile.connectedTo = { x: -1, y: -1 };
       });
     });
   }
 
   clicked(tile) {
-    // console.log(tile.column, tile.row, tile);
-    // tile.color = (tile.color + 1) % 4;
-
     if (this.checkMoves()) {
       if (tile.connected) {
         this.moves++;

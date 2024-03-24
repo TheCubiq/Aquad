@@ -1,6 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 
+import Animated, { 
+  useDerivedValue,
+  withTiming,
+  useAnimatedStyle,
+  } from "react-native-reanimated";
+import { Ionicons } from "@expo/vector-icons";
 import Tile from "./Tile";
 import { Board } from "../objects";
 import { colors, tileEmojis } from "./../constants";
@@ -46,10 +52,17 @@ const GameBoard = (props) => {
   const loadNewGame = () => {
     // todo : load game as "game,moves"
     //        so as ex: 1010,10
-    const game = "1010";
+    const game = {gmbd: "1030", moves:10 };
     // const game = "1013023022210010202233131"
     // const game = "101302302221001020223313111111111111";
-    loadGame(game, true);
+    // const game = { gmbd: "1013023022210010202233131", moves: 10 };
+    let { gmbd, moves } = game;
+
+    loadGame(gmbd, true);
+  };
+
+  const toGameAndMoves = (game, moves = 10) => {
+    return { game, moves };
   };
 
   const resetBoard = () => {
@@ -58,12 +71,13 @@ const GameBoard = (props) => {
     loadGame(saveGame, false);
   };
 
-  const loadGame = (gameBoard, reload) => {
+  const loadGame = (gameBoard, reload, maxMoves = 10) => {
     // check the type of gameBoard
     // if it is a string, we need to convert it to board
     const brd =
       typeof gameBoard === "string" ? stringToBoard(gameBoard) : gameBoard;
     let newBoard = copyBoard(board).loadGame(brd.length, brd, reload);
+    newBoard.maxMoves = maxMoves;
     setBoard(newBoard);
   };
 
@@ -209,17 +223,43 @@ const GameBoard = (props) => {
     );
   };
 
+  const BtnWrapper = (props) => {
+    const iconVisibility = useDerivedValue(() => {
+      return withTiming(props.visible ? 1 : 0, { duration: 500 });
+    });
+    const iconVisible = useAnimatedStyle(() => {
+      return {
+        opacity: iconVisibility.value,
+      };
+    });
+
+    return (
+      <Animated.View style={iconVisible}>
+        <TouchableOpacity
+          disabled={!props.visible}
+          onPress={() => {
+            // setBoard(new Board(props.size));
+            props.pressAction();
+            // ToastAndroid.show("new game started", ToastAndroid.SHORT);
+            // show simple toast that game is reset
+            // ("New game started!");
+          }}>
+          {props.children}
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
   const BtnMoves = () => {
     return (
       <View>
         <Text
           style={{
-            fontSize: 40,
+            fontSize: 30,
             fontWeight: "bold",
             color: colors.primary,
-          }}
-        >
-          moves: {board.moves}/{board.maxMoves}
+          }}>
+          {board.moves}/{board.maxMoves}
         </Text>
       </View>
     );
@@ -230,11 +270,15 @@ const GameBoard = (props) => {
       <MyCustomBtn title={"New Game"} pressAction={newGame} />
       <View style={styles.map}>{cols}</View>
       <BtnMoves />
-      <MyCustomBtn title={"Reset"} pressAction={resetBoard} />
-      {/* <MyCustomBtn title={"load game"} pressAction={loadNewGame} /> */}
-      <MyCustomBtn title={"showEmoji"} pressAction={showSave} />
+      <BtnWrapper pressAction={resetBoard} visible={board.moves > 0}>
+        <Ionicons name="arrow-undo" size={45} color="white" />
+      </BtnWrapper>
     </>
   );
+  // <MyCustomBtn title={"load game"} pressAction={loadNewGame} />
+  // <FontAwesome6 name="circle-notch" size={24} color="black" />
+  // <MyCustomBtn title={"Reset"} pressAction={resetBoard} />
+  // <MyCustomBtn title={"showEmoji"} pressAction={showSave} />
 };
 
 export default GameBoard;
@@ -246,17 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     maxWidth: 420,
     borderRadius: 30,
-    // backgroundColor: colors.bg,
-      backgroundColor: colors.board_bg,
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.43,
-    shadowRadius: 9.51,
-
-    elevation: 15,
+    backgroundColor: colors.board_bg,
     padding: 5,
   },
   column: {

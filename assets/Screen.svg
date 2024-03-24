@@ -1,0 +1,16 @@
+<svg width= "100%" height="100%" viewBox="0 0 400 858" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.63037 39.5848C4.63037 24.8279 8.93609 12.8651 14.2475 12.8651H127.159C132.471 12.8651 136.776 24.8279 136.776 39.5848V801.592C136.776 816.349 132.471 828.311 127.159 828.311H14.2475C8.93609 828.311 4.63037 816.349 4.63037 801.592V39.5848Z" fill="white"/>
+<rect width="400" height="858" fill="#2C2C66"/>
+<ellipse cx="348.5" cy="271" rx="325.5" ry="245" fill="url(#paint0_radial_836_399)"/>
+<circle cx="70.5" cy="764.5" r="364.5" fill="url(#paint1_radial_836_399)"/>
+<defs>
+<radialGradient id="paint0_radial_836_399" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(348.5 271) rotate(90) scale(245 325.5)">
+<stop stop-color="#9859FF" stop-opacity="0.46"/>
+<stop offset="1" stop-color="#2C2C66" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_836_399" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(70.5 764.5) rotate(90) scale(364.5)">
+<stop stop-color="#59FF9C" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#2C2C66" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

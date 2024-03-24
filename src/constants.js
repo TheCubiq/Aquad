@@ -1,6 +1,6 @@
 export const colors = {
-  bg: "hsl(240, 89%, 22%)",
-  board_bg: "hsl(240, 51%, 33%)",
+  bg: "#06066a",
+  board_bg: "#fff1",
   primary: "#ffffff",
   secondary: "#bbb",
   tile_0: "#0fd", // cyan
