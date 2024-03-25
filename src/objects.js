@@ -157,9 +157,9 @@ class Board {
     // else alert("No moves left!");
     this.boardUpdate();
 
-    if (this.hasWon()) {
-      alert("You won!");
-    }
+    // if (this.hasWon()) {
+    //   alert("You won!");
+    // }
 
     return this;
   }

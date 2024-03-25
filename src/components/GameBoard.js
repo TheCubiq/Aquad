@@ -1,11 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useCallback, useState } from "react";
 
-import Animated, { 
+import Animated, {
   useDerivedValue,
   withTiming,
   useAnimatedStyle,
-  } from "react-native-reanimated";
+} from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import Tile from "./Tile";
 import { Board } from "../objects";
@@ -33,6 +33,10 @@ const GameBoard = (props) => {
       require("../../assets/sounds/style1/tileFeedback/2I.mp3"),
       require("../../assets/sounds/style1/tileFeedback/3I.mp3"),
     ],
+    special : {
+      win: require("../../assets/sounds/style1/effects/levelClear.mp3"),
+      start: require("../../assets/sounds/style1/effects/levelStart.mp3"),
+    }
   };
 
   // useEffect(() => {
@@ -46,13 +50,14 @@ const GameBoard = (props) => {
 
   const newGame = () => {
     setBoard(new Board(props.size));
+    playSound(soundPaths.special.start);
   };
 
   // eslint-disable-next-line no-unused-vars
   const loadNewGame = () => {
     // todo : load game as "game,moves"
     //        so as ex: 1010,10
-    const game = {gmbd: "1030", moves:10 };
+    const game = { gmbd: "1030", moves: 10 };
     // const game = "1013023022210010202233131"
     // const game = "101302302221001020223313111111111111";
     // const game = { gmbd: "1013023022210010202233131", moves: 10 };
@@ -140,7 +145,11 @@ const GameBoard = (props) => {
   const onTileClick = (tile) => {
     let newBoard = copyBoard(board).clicked(tile);
     setBoard(newBoard); // update the board
-    playTile(tile);
+    if (newBoard.hasWon()) {
+      levelClear();
+    } else {
+      playTile(tile);
+    }
   };
 
   // const playTile = async ({ color = 0, connected = false }) => {
@@ -157,14 +166,38 @@ const GameBoard = (props) => {
   //   console.log("Tile sound played");
   // };
 
-  const playTile = useCallback(async ({ color = 0, connected = false }) => {
-    // play the tile sound using the expo sound module
-    const { sound } = await Audio.Sound.createAsync(
-      await soundPaths[connected ? "A" : "I"][color]
-    );
-    setTileSound(sound);
+  const playSound = useCallback(async (path) => {
+    const { sound } = await Audio.Sound.createAsync(path);
     await sound.playAsync();
   }, []);
+
+  // const playTile = useCallback(async ({ color = 0, connected = false }) => {
+  //   // play the tile sound using the expo sound module
+  //   const { sound } = await Audio.Sound.createAsync(
+  //     await soundPaths[connected ? "A" : "I"][color]
+  //   );
+  //   setTileSound(sound);
+  //   await sound.playAsync();
+  // }, []);
+
+  const playTile = (tile) => {
+    playSound(soundPaths[tile.connected ? "A" : "I"][tile.color]);
+  }
+
+  const levelClear = () => {
+    playSound(soundPaths.special.win);
+    alert("You won!");
+  }
+
+  // const playTile = async ( {color = 0, connected = false} ) => {
+  //   const soundObject = new Audio.Sound();
+  //   try {
+  //     await soundObject.loadAsync(soundPaths[connected ? "A" : "I"][color]);
+  //     await soundObject.playAsync();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   const cols = board.cols.map((col, index) => {
     return (
@@ -174,17 +207,17 @@ const GameBoard = (props) => {
         onLayout={onLayout}
       >
         {col.map((tile) => {
-          // converting to 
-          const data = { 
-            color : tile.color,
-            column : tile.column,
-            row : tile.row,
-            connected : tile.connected,
-            isParent : tile.isParent(),
-            connectedList : tile.connectedList,
-            connectedTo : tile.connectedTo,
-            active : tile.active,
-           };
+          // converting to
+          const data = {
+            color: tile.color,
+            column: tile.column,
+            row: tile.row,
+            connected: tile.connected,
+            isParent: tile.isParent(),
+            connectedList: tile.connectedList,
+            connectedTo: tile.connectedTo,
+            active: tile.active,
+          };
           return (
             <Tile
               key={(tile.id + 1) * board.id}
@@ -243,7 +276,8 @@ const GameBoard = (props) => {
             // ToastAndroid.show("new game started", ToastAndroid.SHORT);
             // show simple toast that game is reset
             // ("New game started!");
-          }}>
+          }}
+        >
           {props.children}
         </TouchableOpacity>
       </Animated.View>
@@ -258,7 +292,8 @@ const GameBoard = (props) => {
             fontSize: 30,
             fontWeight: "bold",
             color: colors.primary,
-          }}>
+          }}
+        >
           {board.moves}/{board.maxMoves}
         </Text>
       </View>
