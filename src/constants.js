@@ -13,8 +13,8 @@ export const colors = {
 export const tileIcons = {
   0: "square",
   1: "heart",
-  2: "grid",
-  3: "ice-cream",
+  2: "flash",
+  3: "cloudy",
 };
 
 export const tileEmojis = {

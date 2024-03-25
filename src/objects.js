@@ -27,6 +27,7 @@ class Board {
   constructor(size) {
     this.id = Math.random();
     this.loadGame(size);
+    this.winState = false;
   }
 
   randomColor() {
@@ -100,10 +101,10 @@ class Board {
   }
 
   hasWon() {
-    // check if the game is won
     // check if there are any active tiles
-    // return this.cols.every((column) => column.every((tile) => tile.active));
-    return this.cols.every((column) => column.every((tile) => tile.active === false));
+    const check = this.cols.every((column) => column.every((tile) => tile.active === false));
+    this.winState = check;
+    return this.winState;
   }
   
 
@@ -157,9 +158,6 @@ class Board {
     // else alert("No moves left!");
     this.boardUpdate();
 
-    // if (this.hasWon()) {
-    //   alert("You won!");
-    // }
 
     return this;
   }
@@ -172,7 +170,6 @@ class Board {
 
   saveGameTiles() {
     // save the state of the game
-    // return an array of arrays of tile colors
     let gameTiles = [];
     
     for (let i = 0; i < this.size; ++i) {
@@ -190,12 +187,12 @@ class Board {
 
   loadGame(boardSize = 5, gameTiles, newBoard = true, maxMoves = 10) {
     // load the state of the game
-    // gameTiles is an array of arrays of tile colors
     if (newBoard) this.id = Math.random();
     this.size = boardSize;
     this.moves = 0; // reset the moves
     this.maxMoves = maxMoves;
     this.cols = [];
+    this.winState = false;
 
     this.fillBoard(gameTiles);
 

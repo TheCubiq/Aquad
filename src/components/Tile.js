@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import { colors, tileIcons } from "./../constants";
 import Animated, {
@@ -20,23 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 const SPRING_CONF = {
   stiffness: 300,
   damping: 20,
-  // mass: 0.50,
-  // duration: 100,
-  // overshootClamping: true,
 };
-
-// eslint-disable-next-line no-unused-vars
-// const TileStatus = ({ tile }) => {
-//   return (
-//     <Text style={styles.tileText}>
-//       {tile.hasConnections()
-//         ? tile.isParent()
-//           ? "master\n" + (tile.connectedList.length || "none")
-//           : "slave"
-//         : ""}
-//     </Text>
-//   );
-// };
 
 const Tile = (props) => {
   const { tile, tileS } = props;
@@ -44,28 +28,12 @@ const Tile = (props) => {
   const tileShake = useSharedValue(0);
 
   const row = useDerivedValue(() => {
-    // return withTiming((tile.row + 1) * -tileS, SPRING_CONF);
-    // return (tile.row + 1) * -tileS;
     return withSpring(tile.row, SPRING_CONF);
-    // return tile.row;
   });
 
   const connected = useDerivedValue(() => {
     return withTiming(tile.connected ? 1 : 0, { duration: 500 });
   });
-
-  // const iconColor = useDerivedValue(() => {
-  //   return interpolateColor(
-  //     connected.value,
-  //     [0, 1],
-  //     [colors[`tile_${tile.color}`], colors.bg]
-  //     // ["red", "green"]
-  //   );
-  // });
-
-  // useEffect(() => {
-  // row.value = -tile.row * tileS;
-  // });
 
   const iconConnected = useAnimatedStyle(() => {
     return {
@@ -100,14 +68,11 @@ const Tile = (props) => {
       [colors[`tile_${tile.color}`], colors.bg]
     );
 
-    // const width = interpolate(connected.value, [0, 1], [26, 230]);
     const width = tileS / 3;
     const height = width;
 
     return {
       backgroundColor,
-
-      // borderWidth,
       width,
       height,
     };
@@ -126,7 +91,6 @@ const Tile = (props) => {
     const bottom = interpolate(row.value, [0, 1], [0, tileS]);
 
     return {
-      // top: withSpring(row.value, SPRING_CONF),
       bottom,
       borderWidth,
       backgroundColor,
@@ -146,7 +110,6 @@ const Tile = (props) => {
 
   return (
     <Animated.View
-      // style={{ position: "absolute" }}
       entering={FlipInEasyY.delay(500 + 50 * (tile.row + tile.column)).duration(
         500
       )}
@@ -158,9 +121,7 @@ const Tile = (props) => {
           if (!tile.connected) {
             triggerShake();
           }
-          // } else {
-            props.onTileClick(tile);
-          // }
+          props.onTileClick(tile);
         }}
       >
         <Animated.View
@@ -172,7 +133,6 @@ const Tile = (props) => {
             },
             tileStyle,
           ]}
-          // entering={FadeIn.delay(500+10*(tile.row*2)).duration(500)}
         >
           <Animated.View style={relativeIconSize}>
             <Animated.View style={iconConnected}>
@@ -190,7 +150,6 @@ const Tile = (props) => {
               />
             </Animated.View>
           </Animated.View>
-          {/* <TileStatus tile={tile} /> */}
         </Animated.View>
       </TouchableWithoutFeedback>
     </Animated.View>
@@ -224,15 +183,9 @@ const styles = StyleSheet.create({
   },
   tileText: {
     position: "absolute",
-    // top: 40,
-    // left: "48%",
-    // flex: 1,
 
     fontSize: 25,
-    // fontSize: 18,
-    // fontWeight: "bold",
     lineHeight: 20,
-    // color: colors.secondary,
     color: "#ffffff",
     textShadowColor: "#000000",
     textShadowRadius: 5,

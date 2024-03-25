@@ -1,10 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Animated, {
   useDerivedValue,
   withTiming,
   useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import Tile from "./Tile";
@@ -17,25 +18,27 @@ const GameBoard = (props) => {
 
   const [tileWidth, setTileWidth] = useState(84);
 
-  const [currentTileSound, setTileSound] = useState();
-  const [music, setMusic] = useState();
+  const winState = useSharedValue(0);
+
+  const stylePath = "../../assets/sounds/style1";
 
   const soundPaths = {
     A: [
-      require("../../assets/sounds/style1/tileFeedback/0A.mp3"),
-      require("../../assets/sounds/style1/tileFeedback/1A.mp3"),
-      require("../../assets/sounds/style1/tileFeedback/2A.mp3"),
-      require("../../assets/sounds/style1/tileFeedback/3A.mp3"),
+      require(stylePath + "/tileFeedback/0A.mp3"),
+      require(stylePath + "/tileFeedback/1A.mp3"),
+      require(stylePath + "/tileFeedback/2A.mp3"),
+      require(stylePath + "/tileFeedback/3A.mp3"),
     ],
     I: [
-      require("../../assets/sounds/style1/tileFeedback/0I.mp3"),
-      require("../../assets/sounds/style1/tileFeedback/1I.mp3"),
-      require("../../assets/sounds/style1/tileFeedback/2I.mp3"),
-      require("../../assets/sounds/style1/tileFeedback/3I.mp3"),
+      require(stylePath + "/tileFeedback/0I.mp3"),
+      require(stylePath + "/tileFeedback/1I.mp3"),
+      require(stylePath + "/tileFeedback/2I.mp3"),
+      require(stylePath + "/tileFeedback/3I.mp3"),
     ],
     special : {
-      win: require("../../assets/sounds/style1/effects/levelClear.mp3"),
-      start: require("../../assets/sounds/style1/effects/levelStart.mp3"),
+      win: require(stylePath + "/effects/levelClear.mp3"),
+      start: require(stylePath + "/effects/levelStart.mp3"),
+      background: require(stylePath + "/soundtracks/soundtrack1.mp3"),
     }
   };
 
@@ -152,52 +155,35 @@ const GameBoard = (props) => {
     }
   };
 
-  // const playTile = async ({ color = 0, connected = false }) => {
-  //   // play the tile sound using the expo sound module
-  //   console.log("Tile start");
-  //   const { sound } = await Audio.Sound.createAsync(
-  //     await soundPaths[connected ? "A" : "I"][color]
-  //   );
-
-  //   setSound(sound);
-  //   await sound.playAsync();
-
-  //   // await sound.unloadAsync();
-  //   console.log("Tile sound played");
-  // };
-
   const playSound = useCallback(async (path) => {
     const { sound } = await Audio.Sound.createAsync(path);
     await sound.playAsync();
   }, []);
 
-  // const playTile = useCallback(async ({ color = 0, connected = false }) => {
-  //   // play the tile sound using the expo sound module
-  //   const { sound } = await Audio.Sound.createAsync(
-  //     await soundPaths[connected ? "A" : "I"][color]
-  //   );
-  //   setTileSound(sound);
-  //   await sound.playAsync();
-  // }, []);
-
   const playTile = (tile) => {
     playSound(soundPaths[tile.connected ? "A" : "I"][tile.color]);
   }
 
+  const winOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    winOpacity.value = board.winState ? 1 : 0;
+  }, [board.winState]);
+  
   const levelClear = () => {
     playSound(soundPaths.special.win);
-    alert("You won!");
+    props.onWin();
   }
 
-  // const playTile = async ( {color = 0, connected = false} ) => {
-  //   const soundObject = new Audio.Sound();
-  //   try {
-  //     await soundObject.loadAsync(soundPaths[connected ? "A" : "I"][color]);
-  //     await soundObject.playAsync();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  // const winOpacity = useDerivedValue(() => {
+  //   return withTiming(board.winState ? 1 : 0, { duration: 500 });
+  // });
+
+  const winningShow = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(winOpacity.value, { duration: 500 })
+    };
+  });
 
   const cols = board.cols.map((col, index) => {
     return (
@@ -303,7 +289,12 @@ const GameBoard = (props) => {
   return (
     <>
       <MyCustomBtn title={"New Game"} pressAction={newGame} />
-      <View style={styles.map}>{cols}</View>
+      <View style={styles.map}>
+        <Animated.Text style={[styles.wonTitle, winningShow]}>You Won!</Animated.Text>
+        {cols}
+      </View>
+
+
       <BtnMoves />
       <BtnWrapper pressAction={resetBoard} visible={board.moves > 0}>
         <Ionicons name="arrow-undo" size={45} color="white" />
@@ -319,6 +310,22 @@ const GameBoard = (props) => {
 export default GameBoard;
 
 const styles = StyleSheet.create({
+
+  wonTitle: {
+    fontSize: 50,
+    color: colors.primary,
+    position: "absolute",
+    pointerEvents: "none",
+    flex: 1,
+    alignSelf: "center",
+    textAlign: "center",
+    left: 0,
+    right: 0,
+    textTransform: "uppercase",
+    letterSpacing: 5,
+    fontWeight: 200,
+  },
+
   map: {
     width: "100%",
     aspectRatio: 1,
